@@ -63,10 +63,11 @@ config = {
         'u'
     ],
     text: {
-        b: 'Bold',
-        i: 'Italic',
-        u: 'Underline',
-        x: 'Source'
+        b: ['Bold', '&#x0042;'],
+        i: ['Italic', '&#x0049;'],
+        u: ['Underline', '&#x0055;'],
+        a: ['Link', '&#x2693;'],
+        x: ['Source', '&#x22EF;']
     },
     enter: true // change to `false` to automatically submit the closest form on enter key press
 };

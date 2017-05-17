@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  SIMPLEST RICH TEXT EDITOR
+ *  SIMPLEST RICH TEXT EDITOR 1.0.1
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -33,12 +33,29 @@
         stop = 'preventDefault',
         focus = 'focus',
         test = 'test',
+        editable = 'contenteditable',
+        exec = 'execCommand',
         delay = setTimeout;
 
     function command(i, j, o) {
-        if (j && j[get]('contenteditable')) {
+        if (j && j[get](editable)) {
             try {
-                doc.execCommand(i, o);
+                doc[exec](i, o);
+            } catch (e) {}
+        }
+    }
+
+    function link(j, o) {
+        if (j && j[get](editable)) {
+            try {
+                var s = win.getSelection().getRangeAt(0),
+                    a = s.commonAncestorContainer.parentNode;
+                if (!o || a.tagName[tlc]() === 'a') {
+                    a.href = '#';
+                    doc[exec]('unlink', false, false);
+                } else {
+                    doc[exec]('createLink', false, o);
+                }
             } catch (e) {}
         }
     }
@@ -50,7 +67,7 @@
     (function($) {
 
         // plugin version
-        $.version = '1.0.0';
+        $.version = '1.0.1';
 
         // collect all instance(s)
         $[instance] = {};
@@ -71,10 +88,11 @@
                 classes: ['rich-text-editor'],
                 tags: ['a', 'abbr', 'b', 'br', 'code', 'del', 'em', 'i', 'ins', 'kbd', 'mark', 'p', 'span', 'strong', 'u'],
                 text: {
-                    b: 'Bold',
-                    i: 'Italic',
-                    u: 'Underline',
-                    x: 'Source'
+                    b: ['Bold', '&#x0042;'],
+                    i: ['Italic', '&#x0049;'],
+                    u: ['Underline', '&#x0055;'],
+                    a: ['Link', '&#x2693;'],
+                    x: ['Source', '&#x22EF;']
                 },
                 enter: 1
             },
@@ -92,16 +110,19 @@
             blocks = 'blockquote|(fig)?caption|figure|h[1-6]|div|li|[ou]l|pre|t(able|[dh])',
             ctrl = '\u2318',
             shift = '\u21E7',
-            B = btn(text.b + ' (' + ctrl + '+B)', cln + '-b', function() {
+            B = btn(text.b[0] + ' (' + ctrl + '+B)', cln + '-b', text.b, function() {
                 command('bold', content);
             }),
-            I = btn(text.i + ' (' + ctrl + '+I)', cln + '-i', function() {
+            I = btn(text.i[0] + ' (' + ctrl + '+I)', cln + '-i', text.i, function() {
                 command('italic', content);
             }),
-            U = btn(text.u + ' (' + ctrl + '+U)', cln + '-u', function() {
+            U = btn(text.u[0] + ' (' + ctrl + '+U)', cln + '-u', text.u, function() {
                 command('underline', content);
             }),
-            X = btn(text.x + ' (' + ctrl + '+' + shift + '+U)', cln + '-x', function() {
+            A = btn(text.a[0] + ' (' + ctrl + '+L)', cln + '-a', text.a, function() {
+                link(content, prompt(text.a[0], 'http://'));
+            }),
+            X = btn(text.x[0] + ' (' + ctrl + '+' + shift + '+X)', cln + '-x', text.x, function() {
                 if (!t) {
                     container[cla] += ' source';
                     target[focus]();
@@ -158,10 +179,10 @@
         function copy() {
             target[val] = convert(content[html])[re](/<\/p><p>/g, '</p>\n<p>');
         } copy();
-        function btn(t, c, f) {
+        function btn(t, c, s, f) {
             var a = el('a');
             a[cla] = c;
-            a[html] = '<span></span>';
+            a[html] = '<span>' + (s[1] || s[0]) + '</span>';
             a.title = t;
             a.href = 'javascript:;';
             function R(e) {
@@ -179,7 +200,7 @@
         if (config.enter) {
             content[cla] += ' expand';
         }
-        content[set]('contenteditable', true);
+        content[set](editable, true);
         content[set]('spellcheck', false);
         content[set]('placeholder', target.placeholder || "");
         content[event]("paste", function() {
@@ -198,10 +219,12 @@
                 B[1](), e[stop]();
             } else if (ctrl && (key === 'i' || !shift && k === 73)) {
                 I[1](), e[stop]();
-            } else if (ctrl && shift && (key === 'u' || k === 85)) {
+            } else if (ctrl && shift && (key === 'x' || k === 88)) {
                 X[1](), e[stop]();
             } else if (ctrl && (key === 'u' || !shift && k === 85)) {
                 U[1](), e[stop]();
+            } else if (ctrl && (key === 'l' || !shift && k === 76)) {
+                A[1](), e[stop]();
             // submit form on `enter` key in the `span[contenteditable]`
             } else if (!config.enter && (key === 'enter' || !shift && k === 13)) {
                 while (p = p[parent]) {
@@ -219,7 +242,7 @@
                 shift = e.shiftKey,
                 k = e.keyCode,
                 key = kk(e);
-            if (ctrl && shift && (key === 'u' || k === 85)) {
+            if (ctrl && shift && (key === 'x' || k === 88)) {
                 X[1](), e[stop]();
             }
             delay(write, 1);
@@ -227,6 +250,7 @@
         tool[append](B[0]);
         tool[append](I[0]);
         tool[append](U[0]);
+        // tool[append](A[0]);
         tool[append](X[0]);
         container[append](content);
         target[parent][insert](container, target);
