@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <link href="rich-text-editor.min.css" rel="stylesheet">
+    <style>
+    .rich-text-editor-tool {display:none}
+    </style>
+  </head>
+  <body>
+    <form method="get">
+      <p><textarea name="content" placeholder="Write a comment&hellip;"></textarea></p>
+    </form>
+    <script src="rich-text-editor.min.js"></script>
+    <script>
+    new RTE(document.querySelector('textarea'), {
+        enter: false
+    });
+    </script>
+  </body>
+</html>

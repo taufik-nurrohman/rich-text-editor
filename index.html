@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Rich Text Editor</title>
+    <link href="favicon.ico" rel="shortcut icon">
+    <link href="rich-text-editor.min.css" rel="stylesheet">
+    <style>
+    html,body {
+      padding:.5em;
+      margin:0;
+      font:normal normal 13px/1.5 Helmet,FreeSans,Sans-Serif;
+    }
+    </style>
+  </head>
+  <body>
+    <form method="get">
+      <p><textarea name="content" placeholder="Content goes here&hellip;">&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;</textarea></p>
+      <p><button type="submit">Submit</button></p>
+    </form>
+    <script src="rich-text-editor.min.js"></script>
+    <script>
+    new RTE(document.querySelector('textarea'));
+    </script>
+  </body>
+</html>
