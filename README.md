@@ -5,7 +5,7 @@ Rich Text Editor
 
 A rich text editor that only accept limited set of HTML tags. Best to be attached to the public access editor such as comment form or question/answer forms in a forum.
 
-![Rich Text Editor]()
+![Rich Text Editor](https://cloud.githubusercontent.com/assets/1669261/26141683/48b2ec6a-3b07-11e7-9173-5a1f002c5441.gif)
 
 [Demo](http://tovic.github.io/rich-text-editor "View Demo")
 

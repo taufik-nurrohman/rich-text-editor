@@ -19,9 +19,15 @@
       <p><textarea name="content" placeholder="Content goes here&hellip;">&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;</textarea></p>
       <p><button type="submit">Submit</button></p>
     </form>
+    <h2>Examples</h2>
+    <ul>
+      <li><a href="rich-text-editor.html">No Idea?</a></li>
+      <li><a href="rich-text-editor.enter-x.html">Disable Enter Key</a></li>
+      <li><a href="rich-text-editor.tool-x.html">Hide Editor Tools</a></li>
+    </ul>
     <script src="rich-text-editor.min.js"></script>
     <script>
-    new RTE(document.querySelector('textarea'));
+    var editor = new RTE(document.querySelector('textarea'));
     </script>
   </body>
 </html>

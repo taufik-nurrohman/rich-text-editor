@@ -232,6 +232,7 @@
         target[parent][insert](container, target);
         container[append](target);
         container[append](tool);
+        return $;
     });
 
 })(window, document, 'RTE');
