@@ -196,7 +196,7 @@
                 $r[$r_delete]();
                 container[html] = s;
                 f = doc.createDocumentFragment();
-                while ((node = container[first]) ) {
+                while (node = container[first]) {
                     ln = f[append](node);
                 }
                 fn = f[first];
