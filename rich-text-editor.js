@@ -388,7 +388,7 @@
                         link(view, a);
                     } else {
                         if (b = selection_e('a')) {
-                            c = b.href;
+                            c = b[get]('href');
                         }
                         $.d('http://', (c ? c[re](/\/+$/, "") : 'http://' + lc(a[re](/\s/g, ""))) || "", function(e, $, t) {
                             link(view, t[val]);

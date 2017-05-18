@@ -37,7 +37,7 @@
             src = "";
         img = img.firstChild;
         if (img && img.nodeName.toLowerCase() === 'img') {
-            src = img.src || "";
+            src = img.getAttribute('src') || "";
         }
         editor.d('favicon.ico', src, function(e, $, input) {
             editor.i('<br><br><img alt="" src="' + input.value + '"><br><br>', 0);
