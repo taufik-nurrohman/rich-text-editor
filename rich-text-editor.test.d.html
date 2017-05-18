@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <link href="rich-text-editor.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
+    <p>
+      <button onclick="editor.d.v();editor.dialog.children[0].focus();">Show Dialog</button>
+      <button onclick="editor.d.x();">Hide Dialog</button>
+      <button onclick="editor.d.v(true);editor.dialog.children[0].focus();">Show Dialog &amp; Save Selection</button>
+      <button onclick="editor.d.x(true);">Hide Dialog &amp; Restore Selection</button>
+    </p>
+    <p>
+      <button onclick="editor.d('$placeholder', '$value', function(e, $, input){ alert(input.value); });">Show Dialog with Pre&ndash;Defined Placeholder, Value and Callback Function</button>
+    </p>
+    <script src="rich-text-editor.min.js"></script>
+    <script>
+
+    var editor = new RTE(document.querySelector('textarea'));
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <link href="rich-text-editor.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <textarea>Lorem ipsum dolor sit amet.</textarea>
+    <script src="rich-text-editor.min.js"></script>
+    <script>
+
+    var editor = new RTE(document.querySelector('textarea'), {
+        tools: ['b', 'i', 'u', 'a', 'x'],
+        update: function() {
+            console.log(editor.is);
+        }
+    });
+
+    </script>
+  </body>
+</html>

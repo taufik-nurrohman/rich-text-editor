@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <link href="rich-text-editor.min.css" rel="stylesheet">
+    <style>
+    .rich-text-editor-active,
+    .rich-text-editor-active span {
+      background:#00f !important;
+      color:#fff !important;
+    }
+    </style>
+  </head>
+  <body>
+    <textarea>Lo<a href="#">r</a>em <strong>ipsum</strong> <em>dolor</em> <u>sit</u> amet.</textarea>
+    <script src="rich-text-editor.min.js"></script>
+    <script>
+
+    var cn = 'rich-text-editor-active',
+        editor = new RTE(document.querySelector('textarea'), {
+            tools: ['b', 'i', 'u', 'a', 'x'],
+            update: update,
+            d: update
+        });
+
+    editor.view.onfocus = update;
+    editor.view.onclick = update;
+
+    function update() {
+        var e = editor.e(), tag;
+        if (e && e.nodeName) {
+            tag = e.nodeName.toLowerCase();
+            // remove all active class from the editor tool(s)
+            for (var i in editor.config.tools) {
+                i = editor.config.tools[i];
+                if (editor.t[i]) {
+                    editor.t[i].e.classList.remove(cn);
+                }
+            }
+            if (tag === 'strong') editor.t.b.e.classList.add(cn);
+            if (tag === 'em') editor.t.i.e.classList.add(cn);
+            if (tag === 'u') editor.t.u.e.classList.add(cn);
+            if (tag === 'a') editor.t.a.e.classList.add(cn);
+        }
+        console.log('update');
+    }
+
+    </script>
+  </body>
+</html>

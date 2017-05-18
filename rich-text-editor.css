@@ -65,7 +65,7 @@
   visibility:visible;
 }
 .rich-text-editor.source .rich-text-editor-tool a {display:none}
-.rich-text-editor.source .rich-text-editor-tool .rich-text-editor-x {display:block}
+.rich-text-editor.source .rich-text-editor-tool .rich-text-editor-t\:x {display:block}
 .rich-text-editor-source {
   width:100%;
   min-height:8em;
@@ -78,9 +78,9 @@
 }
 .rich-text-editor.source .rich-text-editor-view {display:none}
 .rich-text-editor.source .rich-text-editor-source {display:block}
-.rich-text-editor-b span {font-weight:bold}
-.rich-text-editor-i span {font-style:italic}
-.rich-text-editor-u span {text-decoration:underline}
+.rich-text-editor-t\:b span {font-weight:bold}
+.rich-text-editor-t\:i span {font-style:italic}
+.rich-text-editor-t\:u span {text-decoration:underline}
 
 /* dialog */
 .rich-text-editor-dialog {

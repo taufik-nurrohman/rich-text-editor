@@ -113,6 +113,40 @@ editor.v(true); // as HTML
 editor.v(true, false); // as original selected HTML value in `editor.view` (every browser has their own result)
 ~~~
 
+### Wrap Selection with HTML Element
+
+~~~ .js
+editor.w('strong'); // toggle wrap/unwrap `<strong>` tag
+editor.w('strong', 1); // force wrap `<strong>` tag
+editor.w('strong', 0); // force unwrap `<strong>` tag
+editor.w('strong', -1, 'text goes here…'); // toggle wrap/unwrap `<strong>` tag and insert `` text if no text was selected
+~~~
+
+### Collapse Selection
+
+~~~ .js
+editor.c(0); // collapse to the start of the selection
+editor.c(1); // collapse to the end of the selection
+~~~
+
+### Insert HTML at Caret/Selection
+
+~~~ .js
+editor.i('<img arc="file.png">', true); // select the inserted HTML
+editor.i('<img arc="file.png">', 0); // put caret after the inserted HTML (insert before caret)
+editor.i('<img arc="file.png">', 1); // put caret before the inserted HTML (insert after caret)
+~~~
+
+### Insert Placeholder Character
+
+~~~ .js
+editor.x(0); // insert placeholder character before caret
+editor.x(1); // insert placeholder character after caret
+editor.x(); // remove placeholder character
+~~~
+
+> **Note:** The default placeholder character is stored in `RTE.x` as `\u200C`.
+
 ### Get Selected HTML Node
 
 ~~~ .js
@@ -123,6 +157,27 @@ editor.e('a'); // check if the selected text is an link
 
 ~~~ .js
 editor.f('foo bar <b>baz</b> <span>qux</span>');
+~~~
+
+### Tool
+
+#### Create
+
+~~~ .js
+// id: the tool ID
+// text: array of [title, content, description]
+// fn: the function that will be triggered on click
+// i: tool index from the current tool list (if not defined, tool will be put at the end of the list)
+//
+// editor.t(id, text, fn, i);
+~~~
+
+Create a bold button:
+
+~~~ .js
+editor.t('b', ['Bold', '<b>B</b>', 'Ctrl+B'], function(e, $, node) {
+    
+});
 ~~~
 
 ### Dialog

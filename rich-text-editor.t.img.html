@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <link href="rich-text-editor.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <textarea>Lorem ipsum dolor sit amet.</textarea>
+    <script src="rich-text-editor.min.js"></script>
+    <script>
+
+    var editor = new RTE(document.querySelector('textarea'), {
+        tags: [
+            'a',
+            'abbr',
+            'b',
+            'br',
+            'code',
+            'del',
+            'em',
+            'i',
+            'img', // add `img` to the tag list
+            'ins',
+            'kbd',
+            'mark',
+            'p',
+            'span',
+            'strong',
+            'u'
+        ]
+    });
+
+    editor.t('img', ['Insert Image', '🖼'], function() {
+        var img = window.getSelection().getRangeAt(0).cloneContents(),
+            src = "";
+        img = img.firstChild;
+        if (img && img.nodeName.toLowerCase() === 'img') {
+            src = img.src || "";
+        }
+        editor.d('favicon.ico', src, function(e, $, input) {
+            editor.i('<br><br><img alt="" src="' + input.value + '"><br><br>', 0);
+        });
+    }, -1);
+
+    </script>
+  </body>
+</html>
