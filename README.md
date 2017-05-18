@@ -76,7 +76,7 @@ config = {
 };
 ~~~
 
-**Note:** All block tags are not allowed except `<p>`.
+> **Note:** All block tags are not allowed except `<p>`.
 
 Methods
 -------
@@ -110,7 +110,7 @@ editor.r(s);
 ~~~ .js
 editor.v(); // as plain text
 editor.v(true); // as HTML
-editor.v(true, false); // as original selected HTML value in `editor.view` (every browser has their own result)
+editor.v(true, false); // as original selected HTML value in `editor.view`
 ~~~
 
 ### Wrap Selection with HTML Element
@@ -119,7 +119,7 @@ editor.v(true, false); // as original selected HTML value in `editor.view` (ever
 editor.w('strong'); // toggle wrap/unwrap `<strong>` tag
 editor.w('strong', 1); // force wrap `<strong>` tag
 editor.w('strong', 0); // force unwrap `<strong>` tag
-editor.w('strong', -1, 'text goes here…'); // toggle wrap/unwrap `<strong>` tag and insert `` text if no text was selected
+editor.w('strong', -1, 'text goes here…'); // insert `text goes here…` text if no text was selected
 ~~~
 
 ### Collapse Selection

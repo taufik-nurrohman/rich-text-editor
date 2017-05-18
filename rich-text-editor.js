@@ -137,6 +137,12 @@
             dialog_fn, t, i;
 
         function placeholder_set(i) {
+            // reverse the direction
+            if (i === 1) {
+                i = 0;
+            } else if (i === 0) {
+                i = 1;
+            }
             $r_get()[$r_insert](X), selection_c(i);
         }
 
@@ -189,7 +195,7 @@
 
         function selection_c(i) {
             if ($r = $r_get()) {
-                i = i === 1 ? true : i === 0 ? false : i;
+                i = i === 1 ? false : i === 0 ? true : i;
                 $r[$r_collapse](i);
             }
             return $;
@@ -214,6 +220,12 @@
                     if (select === true) {
                         $r[$r_start_0](fn);
                     } else {
+                        // reverse the direction
+                        if (select === 1) {
+                            select = 0;
+                        } else if (select === 0) {
+                            select = 1;
+                        }
                         selection_c(select);
                     }
                     $s[$s_reset]();
