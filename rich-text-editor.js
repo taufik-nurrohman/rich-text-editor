@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  SIMPLEST RICH TEXT EDITOR 1.0.3
+ *  SIMPLEST RICH TEXT EDITOR 1.0.4
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -31,6 +31,7 @@
         node = 'nodeName',
         get = 'getAttribute',
         set = 'setAttribute',
+        reset = 'removeAttribute',
         re = 'replace',
         rec = 'replaceChild',
         val = 'value',
@@ -44,6 +45,15 @@
         spellcheck = 'spellcheck',
         placeholder = 'placeholder',
         selection = 'getSelection',
+        selection_at = 'getRangeAt',
+        selection_count = 'rangeCount',
+        selection_copy = 'cloneContents',
+        selection_delete = 'deleteContents',
+        selection_add = 'addRange',
+        selection_insert = 'insertNode',
+        selection_clone = 'cloneRange',
+        selection_remove_all = 'removeAllRanges',
+        selection_collapse = 'collapse',
         exec = 'execCommand',
         nul = null,
         CTRL = 'ctrlKey',
@@ -60,6 +70,10 @@
         return s.toLowerCase();
     }
 
+    function is_x(x) {
+        return typeof x === "undefined";
+    }
+
     function is_fn(x) {
         return typeof x === "function";
     }
@@ -67,7 +81,7 @@
     (function($) {
 
         // plugin version
-        $.version = '1.0.3';
+        $.version = '1.0.4';
 
         // collect all instance(s)
         $[instance] = {};
@@ -110,22 +124,30 @@
 
         function get_$() {
             sel = win[selection] && win[selection]() || {};
-            return sel.rangeCount && sel || nul;
+            return sel[selection_count] && sel || nul;
         }
 
         function get_$$(r) {
             sel = get_$();
-            return sel && sel.getRangeAt(r || 0) || nul;
+            return sel && sel[selection_at](r || 0) || nul;
         }
 
-        function get_selection(h) {
+        function selection_v(h, x) {
             if (h) {
-                // TODO (get selection HTML)
+                if (sel = get_$()) {
+                    var container = el('div'), i, j;
+                    for (i = 0, j = sel[selection_count]; i < j; ++i) {
+                        container[append](sel[selection_at](i)[selection_copy]());
+                    }
+                    h = container[html];
+                    return is_x(x) || x ? convert(h) : h;
+                }
+                return "";
             }
             return get_$() + "";
         }
 
-        function get_selection_tag(t) {
+        function selection_e(t) {
             var a = get_$$().commonAncestorContainer[parent],
                 b = lc(a[node]), c, d;
             if (t) {
@@ -143,6 +165,42 @@
             return b;
         }
 
+        function selection_c(i) {
+            if (sel = get_$$()) {
+                i = i === -1 ? false : i === 1 ? true : i;
+                sel[selection_collapse](i);
+            }
+            return $;
+        }
+
+        function selection_i(s, select) {
+            var sel, range, f, node, fn, ln,
+                container = el('div');
+            if (sel = get_$()) {
+                range = get_$$();
+                range[selection_delete]();
+                container[html] = s;
+                f = doc.createDocumentFragment();
+                while ((node = container[first]) ) {
+                    ln = f[append](node);
+                }
+                fn = f[first];
+                range[selection_insert](f);
+                if (ln) {
+                    range = range[selection_clone]();
+                    range.setStartAfter(ln);
+                    if (select === true) {
+                        range.setStartBefore(fn);
+                    } else {
+                        selection_c(select);
+                    }
+                    sel[selection_remove_all]();
+                    sel[selection_add](range);
+                }
+            }
+            return f;
+        }
+
         function command(i, j, o) {
             if (j && j[get](editable)) {
                 try {
@@ -154,7 +212,7 @@
         function link(j, o) {
             if (j && j[get](editable)) {
                 try {
-                    var a = get_selection_tag('a'), b;
+                    var a = selection_e('a'), b;
                     if (!o) {
                         a && (a.href = '#');
                         doc[exec]('unlink', false, false);
@@ -164,7 +222,6 @@
                             a[parent][rec](b[first], a);
                         }
                     } else {
-                        /*
                         o = o[re](/^\s*javascript:/i, "");
                         // check for external link
                         var i = o[0], j = win.location.hostname;
@@ -172,35 +229,41 @@
                         if (j && (o[pos]('//' + j) === 0 || o[pos]('://' + j) !== -1)) {
                             i = 1;
                         }
-                        */
                         doc[exec]('createLink', false, o);
-                        /*
-                        a = get_$().anchorNode.nextElementSibling;
-                        if (!i && a && a.href) {
-                            a.rel = 'nofollow';
-                            a.target = '_blank';
+                        a = get_$().focusNode;
+                        if (a.nodeType === 3) {
+                            a = a[parent];
                         }
-                        */
+                        if (a && a.href) {
+                            if (i) {
+                                a[reset]('rel');
+                                a[reset]('target');
+                            } else {
+                                a[set]('rel', 'nofollow');
+                                a[set]('target', '_blank');
+                            }
+                        }
                     }
                 } catch (e) {}
             }
         }
 
-        function save_selection() {
+        function selection_s() {
             sel = get_$();
-            if (sel || get_selection() === "") {
-                return get_$$().cloneRange() || nul;
+            if (sel || selection_v() === "") {
+                return get_$$()[selection_clone]() || nul;
             }
             return nul;
         }
 
-        function restore_selection(range) {
+        function selection_r(range) {
             if (range) {
                 if (sel = get_$()) {
-                    sel.removeAllRanges();
-                    sel.addRange(range);
+                    sel[selection_remove_all]();
+                    sel[selection_add](range);
                 }
             }
+            return $;
         }
 
         function focus_end(x) {
@@ -209,10 +272,15 @@
         }
 
         $.$ = [nul, nul];
-        $.s = save_selection;
-        $.r = restore_selection;
+        $.s = selection_s;
+        $.r = selection_r;
+        $.e = selection_e;
+        $.v = selection_v;
+        $.i = selection_i;
+        $.t = function() {}; // TODO
+        $.c = selection_c;
         $.d = function(p, v, f) {
-            $.$[0] = save_selection();
+            $.$[0] = selection_s();
             var d = dialog[child][0];
             d[placeholder] = p;
             d[val] = v;
@@ -222,26 +290,34 @@
             dialog_fn = f;
             return $.d.v(), $;
         };
-        $.d.x = function() {
+        $.d.x = function(r) {
             dialog.style.display = 'none';
+            $.is.d = false;
+            r && selection_r($.$[0]);
             return $;
         };
         $.d.v = function() {
             dialog.style.display = 'block';
+            $.is.d = true;
             return $;
         };
         win[NS][instance][target.id || target.name || Object.keys(win[NS][instance])[len]] = $;
         o = o || {};
         for (i in config) {
-            if (typeof o[i] !== "undefined") config[i] = o[i];
+            if (!is_x(o[i])) config[i] = o[i];
         }
+        $.is = {
+            view: true,
+            source: false,
+            d: false
+        };
         var c_enter = config.enter,
             c_x = config.x,
             c_update = config.update,
             cln = config.classes[0],
             text = config.text || {},
             tags = config.tags.join('|'),
-            blocks = 'blockquote|(fig)?caption|figure|h[1-6]|div|li|[ou]l|pre|t(able|[dh])',
+            blocks = 'blockquote|(fig)?caption|figure|h[1-6]|div|li|[ou]l|p(re)?|t(able|[dh])',
             _t = 0,
             tools = {
                 b: function() {
@@ -254,11 +330,11 @@
                     command('underline', view);
                 },
                 a: function(e) {
-                    var a = get_selection(), b;
+                    var a = selection_v(), b;
                     if (/^[a-z\d]+:\/\/\S+$/[test](a)) {
                         link(view, a);
                     } else {
-                        b = get_selection_tag('a');
+                        b = selection_e('a');
                         $.d('http://', (b ? b.href[re](/\/+$/, "") : 'http://' + lc(a[re](/\s/g, ""))) || "", function(e, $, t) {
                             link(view, t[val]);
                         });
@@ -268,23 +344,28 @@
                     var h = view.offsetHeight;
                     h && (target.style.minHeight = h + 'px');
                     if (!_t) {
-                        $.$[0] = save_selection();
+                        $.$[0] = selection_s();
                         container[cla] += ' source';
                         focus_end(target);
-                        restore_selection($.$[1]);
+                        selection_r($.$[1]);
                         _t = 1;
                     } else {
-                        $.$[1] = save_selection();
+                        $.$[1] = selection_s();
                         container[cla] = container[cla][re](/\s+source$/, "");
                         view[focus]();
-                        restore_selection($.$[0]);
+                        selection_r($.$[0]);
                         _t = 0;
                     }
+                    $.is = {
+                        view: !_t,
+                        source: !!_t
+                    };
                     $.d.x();
                     is_fn(c_x) && c_x(e, $, _t || 0);
                 }
             };
         for (i in tools) {
+            $.t[i] = tools[i];
             tools[i] = btn(text[i][0] + (text[i][2] ? ' (' + text[i][2] + ')' : ""), cln + '-' + i, text[i], tools[i]);
         }
         function pattern(a, b) {
@@ -386,12 +467,12 @@
                     r = get_$$(),
                     br = el('br');
                 if (c_enter && r) {
-                    r.deleteContents();
-                    r.insertNode(br);
+                    r[selection_delete]();
+                    r[selection_insert](br);
                     r.setStartAfter(br);
-                    r.setEndAfter(br); 
-                    s.removeAllRanges();
-                    s.addRange(r);
+                    r.setEndAfter(br);
+                    s[selection_remove_all]();
+                    s[selection_add](r);
                     e[stop]();
                 }
                 // submit form on `enter` key in the `span[contenteditable]`
@@ -436,31 +517,32 @@
         dialog[cla] = cln + '-dialog';
         dialog[html] = '<input type="text">';
         $.d.x();
-        dialog[child][0][set](spellcheck, false);
-        dialog[child][0][event]("keydown", function(e) {
+        var dc = dialog[child][0];
+        dc[set](spellcheck, false);
+        dc[event]("keydown", function(e) {
             var t = this,
                 ctrl = e[CTRL],
                 shift = e[SHIFT],
                 k = e[KEYC],
                 key = kk(e);
             if (!ctrl && !shift && (key === 'enter' || k === 13)) {
-                $.d.x();
+                $.d.x(1);
                 view[focus]();
-                restore_selection($.$[0]);
                 dialog_fn && (dialog_fn(e, $, t), dialog_fn = 0, e[stop]());
             } else if (!shift && ((key === 'escape' || k === 27) || (!t[val][len] && (key === 'backspace' || k === 8)))) {
-                $.d.x();
+                $.d.x(1);
                 view[focus]();
-                restore_selection($.$[0]);
-                e[stop]();
+                dialog_fn = 0, e[stop]();
             }
         }, false);
         container[append](dialog);
         $.container = container;
-        $.tool = tool;
         $.view = view;
         $.target = $.source = target;
+        $.tool = tool;
         $.dialog = dialog;
+        $.config = config;
+        $.f = convert;
         return $;
     });
 

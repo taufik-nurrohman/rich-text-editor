@@ -77,3 +77,85 @@ config = {
 ~~~
 
 **Note:** All block tags are not allowed except `<p>`.
+
+Methods
+-------
+
+### Properties
+
+~~~ .js
+editor.$; // selection storage [view, source]
+editor.container; // editor container
+editor.view; // editor view
+editor.source; // editor source
+editor.tool; // editor tool
+editor.dialog; // editor dialog
+editor.config; // editor configuration
+~~~
+
+### Save Selection
+
+~~~ .js
+var s = editor.s();
+~~~
+
+### Restore Selection
+
+~~~ .js
+editor.r(s);
+~~~
+
+### Get Selection
+
+~~~ .js
+editor.v(); // as plain text
+editor.v(true); // as HTML
+editor.v(true, false); // as original selected HTML value in `editor.view` (every browser has their own result)
+~~~
+
+### Get Selected HTML Node
+
+~~~ .js
+editor.e('a'); // check if the selected text is an link
+~~~
+
+### Sanitize HTML
+
+~~~ .js
+editor.f('foo bar <b>baz</b> <span>qux</span>');
+~~~
+
+### Dialog
+
+#### Create
+
+~~~ .js
+// fn(e, $, input);
+editor.d(placeholder, value, fn);
+~~~
+
+#### Show
+
+~~~ .js
+editor.d.v();
+~~~
+
+#### Hide
+
+~~~ .js
+editor.d.x();
+~~~
+
+~~~ .js
+editor.d.x(true); // restore previous selection
+~~~
+
+### State
+
+Check whether these elements are visible at the time:
+
+~~~ .js
+editor.is.view; // the rich text editor view
+editor.is.source; // the HTML source view
+editor.is.d; // the dialog view
+~~~
