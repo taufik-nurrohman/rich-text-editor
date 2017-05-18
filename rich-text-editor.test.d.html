@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Demo</title>
-    <link href="rich-text-editor.min.css" rel="stylesheet">
+    <link href="rich-text-editor.css" rel="stylesheet">
   </head>
   <body>
     <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
@@ -17,7 +17,7 @@
     <p>
       <button onclick="editor.d('$placeholder', '$value', function(e, $, input){ alert(input.value); });">Show Dialog with Pre&ndash;Defined Placeholder, Value and Callback Function</button>
     </p>
-    <script src="rich-text-editor.min.js"></script>
+    <script src="rich-text-editor.js"></script>
     <script>
 
     var editor = new RTE(document.querySelector('textarea'));

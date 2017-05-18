@@ -39,6 +39,7 @@
         pos = 'indexOf',
         stop = 'preventDefault',
         focus = 'focus',
+        blur = 'blur',
         select = 'select',
         test = 'test',
         editable = 'contenteditable',
@@ -107,7 +108,7 @@
         };
 
         // placeholder character
-        $.x = '\u200c';
+        $.x = '\u001a';
 
     })(win[NS] = function(target, o) {
         var $ = this,
@@ -122,7 +123,7 @@
                     i: ['Italic', '&#x0049;', ctrl + '+I'],
                     u: ['Underline', '&#x0055;', ctrl + '+U'],
                     a: ['Link', '&#x2693;', ctrl + '+L'],
-                    x: ['Source', '&#x22EF;', ctrl + '+' + shift + '+X']
+                    x: ['Source', '&#x22ef;', ctrl + '+' + shift + '+X']
                 },
                 enter: 1,
                 x: 0,
@@ -133,22 +134,8 @@
             view = el('span'),
             dialog = el('span'),
             BR = '<br>',
-            X = doc.createTextNode(win[NS].x),
+            X = win[NS].x,
             dialog_fn, t, i;
-
-        function placeholder_set(i) {
-            // reverse the direction
-            if (i === 1) {
-                i = 0;
-            } else if (i === 0) {
-                i = 1;
-            }
-            $r_get()[$r_insert](X), selection_c(i);
-        }
-
-        function placeholder_reset() {
-            X[parent] && X[parent][remove](X);
-        }
 
         function $s_get() {
             $s = win[$s_] && win[$s_]() || {};
@@ -167,7 +154,7 @@
                     for (i = 0, j = $s[$s_i]; i < j; ++i) {
                         container[append]($s[$s_at](i)[$r_copy]());
                     }
-                    h = container[html];
+                    h = container[html].split(X).join("");
                     return is_x(x) || x ? selection_f(h) : h;
                 }
                 return "";
@@ -311,14 +298,16 @@
                 b = selection_v(1)[re](pattern('^<p>|<\\/p>$|<' + t + '(?:\\s[^<>]*?)?>|<\\/' + t + '>', 'g'), ""), c, d;
             if (a !== view) {
                 if (i === 0 || (i === -1 && a)) {
-                    d = a[html];
-                    a[parent][remove](a);
-                    c = selection_i(b || d, true);
+                    if (a && (d = a[html])) {
+                        a[parent][remove](a);
+                        c = selection_i(b || d, true);
+                    }
                 } else if (i === 1 || (i === -1 && !a)) {
                     c = selection_i('<' + t + '>' + b + '</' + t + '>', true);
                 }
                 if (c) {
-                    $r_get()[$r_select_content](c);
+                    $r = $r_get();
+                    $r && $r[$r_select_content](c);
                     if (!b && p) {
                         selection_i(p, true);
                     }
@@ -496,7 +485,7 @@
             // convert line break to `<p>` and `<br>`
             text = text[re](/<\/p>\s*<p>/g, '</p><p>')[re](/\s*<br\s*\/?>\s*/g, BR)[re](/\n/g, BR)[re](pattern('(?:' + BR + '){3,}', 'g'), BR + BR)[re](pattern('^(?:(?:' + BR + ')+)|(?:(?:' + BR + ')+)$'), "")[re](pattern(BR + BR, 'g'), '</p><p>')[re](/<p><\/p>/g, "");
             text = text && !/^\s*<p>([\s\S]*?)<\/p>\s*$/i[test](text) ? '<p>' + text + '</p>' : text;
-            return text;
+            return text.split(X).join("");
         }
         function write() {
             view[html] = selection_f(target[val])[re](/<\/p>\s*<p>/g, BR + BR)[re](/<\/?p>/g, "");
@@ -515,6 +504,7 @@
         view[set](editable, true);
         view[set](spellcheck, false);
         view[set](placeholder, target[placeholder] || "");
+        view[event](blur, copy, false);
         view[event]("paste", function() {
             delay(function() {
                 write();
@@ -545,9 +535,11 @@
                 // Press `enter` to insert a line break
                 // Fix IE that will automatically inserts `<p>` instead of `<br>`
                 if (c_enter) {
-                    placeholder_set(1);
-                    selection_i(BR, 0);
-                    e[stop]();
+                  $s = $s_get();
+                  $r = $r_get();
+                  selection_i(BR, 0);
+                  selection_i(X, 1);
+                  e[stop]();
                 }
                 // submit form on `enter` key in the `span[contenteditable]`
                 if (!c_enter) {
@@ -561,15 +553,10 @@
                 } else if (is_fn(c_enter)) {
                     c_enter(e, $, view);
                 }
-            } else if (!shift && (key === 'backspace' || k === 8)) {
-                placeholder_reset();
             }
             is_fn(c_update) && c_update(e, $, view);
             delay(copy, 1);
         }, false);
-        view[event]("blur", function() {
-            placeholder_reset(), copy();
-        });
         target[event]("keydown", function(e) {
             var ctrl = e[CTRL],
                 shift = e[SHIFT],
@@ -629,13 +616,48 @@
         $.s = selection_s;
         $.v = selection_v;
         $.w = selection_w;
-        $.x = function(x, y) {
-            if (!is_x(x)) {
-                placeholder_set(x);
-            } else {
-                placeholder_reset();
+        // focus
+        $[focus] = function() {
+            if ($.is.view) {
+                view[focus]();
+            } else if ($.is.source) {
+                target[focus]();
             }
-        }
+            return $;
+        };
+        // blur
+        $[blur] = function() {
+            if ($.is.view) {
+                view[blur]();
+            } else if ($.is.source) {
+                target[blur]();
+            }
+            return $;
+        };
+        // select all
+        $[select] = function() {
+            $[focus]();
+            if ($.is.view) {
+                $r = doc.createRange();
+                $r[$r_select_content](view);
+                $s = $s_get();
+                $s[$s_reset]();
+                $s[$s_set]($r);
+            } else if ($.is.source) {
+                target[select]();
+            }
+            return $;
+        };
+        $.disable = function() {
+            view[reset](editable);
+            target[set]('readonly', true);
+            return $;
+        };
+        $.enable = function() {
+            view[set](editable, true);
+            target[reset]('readonly');
+            return $s;
+        };
         return $;
     });
 

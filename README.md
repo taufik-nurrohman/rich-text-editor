@@ -81,6 +81,16 @@ config = {
 Methods
 -------
 
+### Interactions
+
+~~~ .js
+editor.focus();
+editor.blur();
+editor.select();
+editor.disable();
+editor.enable();
+~~~
+
 ### Properties
 
 ~~~ .js
@@ -136,16 +146,6 @@ editor.i('<img arc="file.png">', true); // select the inserted HTML
 editor.i('<img arc="file.png">', 0); // put caret after the inserted HTML (insert before caret)
 editor.i('<img arc="file.png">', 1); // put caret before the inserted HTML (insert after caret)
 ~~~
-
-### Insert Placeholder Character
-
-~~~ .js
-editor.x(0); // insert placeholder character before caret
-editor.x(1); // insert placeholder character after caret
-editor.x(); // remove placeholder character
-~~~
-
-> **Note:** The default placeholder character is stored in `RTE.x` as `\u200C`.
 
 ### Get Selected HTML Node
 
