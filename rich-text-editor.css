@@ -1,6 +1,6 @@
 .rich-text-editor,
 .rich-text-editor-tool,
-.rich-text-editor-content,
+.rich-text-editor-view,
 .rich-text-editor-source {
   display:block;
   margin:0;
@@ -19,9 +19,10 @@
   background:#fff;
   color:#000;
   line-height:1.5em;
+  position:relative;
 }
 .rich-text-editor-tool {
-  font:normal normal 14px/2em "Times New Roman",Times,Serif;
+  font:normal normal 100%/2em "Times New Roman",Times,Serif;
   text-align:center;
   -webkit-transition:all .25s ease-out .25s;
   -moz-transition:all .25s ease-out .25s;
@@ -44,7 +45,8 @@
 }
 .rich-text-editor-tool a:focus,
 .rich-text-editor-tool a:hover {background:#eff}
-.rich-text-editor-content {
+.rich-text-editor-view {
+  display:block;
   -webkit-box-sizing:content-box;
   -moz-box-sizing:content-box;
   box-sizing:content-box;
@@ -52,9 +54,9 @@
   min-height:1.5em;
   overflow:auto;
 }
-.rich-text-editor-content.expand {min-height:6em}
+.rich-text-editor.expand .rich-text-editor-view {min-height:6em}
 .rich-text-editor:hover .rich-text-editor-tool,
-.rich-text-editor-content:focus + .rich-text-editor-source + .rich-text-editor-tool,
+.rich-text-editor-view:focus + .rich-text-editor-source + .rich-text-editor-tool,
 .rich-text-editor-source:focus + .rich-text-editor-tool {
   -webkit-transition-delay:.125s;
   -moz-transition-delay:.125s;
@@ -62,46 +64,74 @@
   opacity:1;
   visibility:visible;
 }
-.rich-text-editor-source:focus + .rich-text-editor-tool a {display:none}
-.rich-text-editor-source:focus + .rich-text-editor-tool .rich-text-editor-x {display:block}
+.rich-text-editor.source .rich-text-editor-tool a {display:none}
+.rich-text-editor.source .rich-text-editor-tool .rich-text-editor-x {display:block}
 .rich-text-editor-source {
   width:100%;
-  min-height:5em;
+  min-height:8em;
   background:#def;
   font-family:'Courier New',Courier,'Nimbus Mono L',Monospace;
-  padding:1em;
+  padding:1px 4px;
   resize:vertical;
+  overflow:auto;
   display:none;
 }
-.rich-text-editor.source .rich-text-editor-content {display:none}
+.rich-text-editor.source .rich-text-editor-view {display:none}
 .rich-text-editor.source .rich-text-editor-source {display:block}
 .rich-text-editor-b span {font-weight:bold}
 .rich-text-editor-i span {font-style:italic}
 .rich-text-editor-u span {text-decoration:underline}
 
+/* dialog */
+.rich-text-editor-dialog {
+  background:inherit;
+  border:inherit;
+  border-width:0;
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:2em;
+  left:0;
+  padding:1em;
+}
+.rich-text-editor-dialog input {
+  display:inline-block;
+  vertical-align:middle;
+  width:12em;
+  background:none;
+  border:0;
+  outline:0;
+  border-bottom:2px solid;
+  border-color:inherit;
+  font:inherit;
+  color:#00f;
+  margin:0;
+  padding:0 0 .25em;
+}
+
 /* editor placeholder */
-.rich-text-editor-content:empty:before {
+.rich-text-editor-view:empty:before {
   content:attr(placeholder);
   opacity:.4;
 }
-.rich-text-editor-content:focus:before {display:none}
+.rich-text-editor-view:focus:before {display:none}
 
 /* editor content */
-.rich-text-editor-content a {
+.rich-text-editor-view a {
   color:#00f;
   text-decoration:underline;
 }
-.rich-text-editor-content mark {
+.rich-text-editor-view mark {
   background:#ff0;
   color:inherit;
 }
-.rich-text-editor-content abbr {
+.rich-text-editor-view abbr {
   text-decoration:none;
   border-bottom:1px dotted;
 }
-.rich-text-editor-content b,
-.rich-text-editor-content strong {font-weight:bold}
-.rich-text-editor-content i,
-.rich-text-editor-content em {font-style:italic}
-.rich-text-editor-content u,
-.rich-text-editor-content ins {text-decoration:underline}
+.rich-text-editor-view b,
+.rich-text-editor-view strong {font-weight:bold}
+.rich-text-editor-view i,
+.rich-text-editor-view em {font-style:italic}
+.rich-text-editor-view u,
+.rich-text-editor-view ins {text-decoration:underline}

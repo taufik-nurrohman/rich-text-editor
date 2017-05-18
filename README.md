@@ -45,7 +45,8 @@ Variable | Description
 ~~~ .js
 config = {
     classes: ['rich-text-editor'],
-    tags: [ // allowed HTML tag(s)
+    tools: ['b', 'i', 'u', 'a', 'x'], // visible tool(s)
+    tags: [ // allowed inline HTML tag(s)
         'a',
         'abbr',
         'b',
@@ -63,12 +64,16 @@ config = {
         'u'
     ],
     text: {
-        b: ['Bold', '&#x0042;'],
-        i: ['Italic', '&#x0049;'],
-        u: ['Underline', '&#x0055;'],
-        a: ['Link', '&#x2693;'],
-        x: ['Source', '&#x22EF;']
+        b: ['Bold', '&#x0042;', '⌘+B'],
+        i: ['Italic', '&#x0049;', '⌘+I'],
+        u: ['Underline', '&#x0055;', '⌘+U'],
+        a: ['Link', '&#x2693;', '⌘+L'],
+        x: ['Source', '&#x22EF;', '⌘+⇧+X']
     },
-    enter: true // change to `false` to automatically submit the closest form on enter key press
+    enter: true, // change to `false` to automatically submit the closest form on enter key press
+    x: function(e, $, node) {}, // on change editor mode (view or source)
+    update: function(e, $, node) {} // on view/source update
 };
 ~~~
+
+**Note:** All block tags are not allowed except `<p>`.

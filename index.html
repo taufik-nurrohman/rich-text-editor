@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width">
     <title>Rich Text Editor</title>
     <link href="favicon.ico" rel="shortcut icon">
-    <link href="rich-text-editor.min.css" rel="stylesheet">
+    <link href="rich-text-editor.css" rel="stylesheet">
     <style>
     html,
     body {
@@ -29,10 +29,21 @@
       <li><a href="rich-text-editor.html">No Idea?</a></li>
       <li><a href="rich-text-editor.enter-x.html">Disable Enter Key</a></li>
       <li><a href="rich-text-editor.tool-x.html">Hide Editor Tools</a></li>
+      <li><a href="rich-text-editor.tool-v.html">Show Editor Tools</a></li>
     </ul>
-    <script src="rich-text-editor.min.js"></script>
+    <script src="rich-text-editor.js"></script>
     <script>
-    var editor = new RTE(document.querySelector('textarea'));
+    var editor = new RTE(document.querySelector('textarea'), {
+        enter: function() {
+            console.log('enter');
+        },
+        x: function(e, $, t) {
+            console.log('x:' + t);
+        },
+        update: function() {
+            console.log('update');
+        }
+    });
     </script>
   </body>
 </html>
