@@ -87,8 +87,8 @@ Methods
 editor.focus();
 editor.blur();
 editor.select();
-editor.disable();
 editor.enable();
+editor.disable();
 ~~~
 
 ### Properties

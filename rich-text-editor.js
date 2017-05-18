@@ -108,7 +108,7 @@
         };
 
         // placeholder character
-        $.x = '\u001a';
+        $.x = '\u200b';
 
     })(win[NS] = function(target, o) {
         var $ = this,
@@ -291,9 +291,7 @@
         }
 
         function selection_w(t, i, p) {
-            if (is_x(i)) {
-                i = -1;
-            }
+            if (is_x(i)) i = -1;
             var a = selection_e(t),
                 b = selection_v(1)[re](pattern('^<p>|<\\/p>$|<' + t + '(?:\\s[^<>]*?)?>|<\\/' + t + '>', 'g'), ""), c, d;
             if (a !== view) {
