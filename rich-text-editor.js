@@ -651,11 +651,11 @@
                 // Press `enter` to insert a line break
                 // Fix IE that will automatically inserts `<p>` instead of `<br>`
                 if (c_enter) {
-                  $s = $s_get();
-                  $r = $r_get();
-                  selection_i(BR, 0);
-                  selection_i(X, 1);
-                  e[stop]();
+                    $s = $s_get();
+                    $r = $r_get();
+                    selection_i(BR, 0);
+                    selection_i(X, 1);
+                    e[stop]();
                 }
                 // submit form on `enter` key in the `span[contenteditable]`
                 if (!c_enter) {
@@ -665,7 +665,7 @@
                             break;
                         }
                     }
-                    form && form.submit();
+                    form && (form.submit(), e[stop]());
                 } else if (is_fn(c_enter)) {
                     c_enter(e, $, view);
                 }
