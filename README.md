@@ -3,7 +3,7 @@ Rich Text Editor
 
 > Simple rich text editor.
 
-A rich text editor that only accept limited set of HTML tags. Best to be attached to the public access editor such as comment form or question/answer forms in a forum.
+A rich text editor that is designed to accept only limited set of inline HTML tags. Works best to be used on any editors that are accessible in the public such as comment form in a blog or Q/A form in a forum.
 
 ![Rich Text Editor](https://cloud.githubusercontent.com/assets/1669261/26141683/48b2ec6a-3b07-11e7-9173-5a1f002c5441.gif)
 
@@ -52,6 +52,7 @@ config = {
         'b',
         'br',
         'code',
+        'dfn',
         'del',
         'em',
         'i',
@@ -61,15 +62,17 @@ config = {
         'p',
         'span',
         'strong',
-        'u'
+        'u',
+        'var
     ],
     text: {
-        b: ['Bold', '&#x0042;', '⌘+B'],
-        i: ['Italic', '&#x0049;', '⌘+I'],
-        u: ['Underline', '&#x0055;', '⌘+U'],
-        a: ['Link', '&#x2693;', '⌘+L'],
-        x: ['Source', '&#x22EF;', '⌘+⇧+X']
+        b: ['Bold', 'B', '⌘+B'],
+        i: ['Italic', 'I', '⌘+I'],
+        u: ['Underline', 'U', '⌘+U'],
+        a: ['Link', 'A', '⌘+L'],
+        x: ['Source', '&#x22ef;', '⌘+⇧+X']
     },
+    tidy: true, // tidy HTML output?
     enter: true, // change to `false` to automatically submit the closest form on enter key press
     x: function(e, $, node) {}, // on change editor mode (view or source)
     update: function(e, $, node) {} // on view/source update
@@ -85,8 +88,10 @@ Methods
 
 ~~~ .js
 editor.focus();
+editor.focus(0); // focus start
+editor.focus(1); // focus end
+editor.focus(true); // select all
 editor.blur();
-editor.select();
 editor.enable();
 editor.disable();
 ~~~
@@ -94,13 +99,25 @@ editor.disable();
 ### Properties
 
 ~~~ .js
-editor.$; // selection storage [view, source]
+editor.$; // selection storage [source, view]
 editor.container; // editor container
 editor.view; // editor view
 editor.source; // editor source
 editor.tool; // editor tool
 editor.dialog; // editor dialog
 editor.config; // editor configuration
+~~~
+
+### Set Value
+
+~~~ .js
+editor.set('Lorem ipsum dolor sit amet.');
+~~~
+
+### Get Value
+
+~~~ .js
+console.log(editor.get());
 ~~~
 
 ### Save Selection
@@ -120,6 +137,7 @@ editor.r(s);
 ~~~ .js
 editor.v(); // as plain text
 editor.v(true); // as HTML
+editor.v(true, true, true); // as HTML and remove the wrapping `<p>` tag
 editor.v(true, false); // as original selected HTML value in `editor.view`
 ~~~
 
@@ -130,6 +148,15 @@ editor.w('strong'); // toggle wrap/unwrap `<strong>` tag
 editor.w('strong', 1); // force wrap `<strong>` tag
 editor.w('strong', 0); // force unwrap `<strong>` tag
 editor.w('strong', -1, 'text goes here…'); // insert `text goes here…` text if no text was selected
+~~~
+
+Wrap selection with HTML element and add attributes on it:
+
+~~~ .js
+var e = editor.w('a');
+e.href = 'http://example.com';
+e.rel = 'nofollow';
+e.target = '_blank';
 ~~~
 
 ### Collapse Selection
@@ -213,4 +240,6 @@ Check whether these elements are visible at the time:
 editor.is.view; // the rich text editor view
 editor.is.source; // the HTML source view
 editor.is.d; // the dialog view
+editor.is.focus; // check if cursor is active in the view
+editor.is.blur; // check if cursor is inactive in the view
 ~~~

@@ -5,22 +5,12 @@
     <meta name="viewport" content="width=device-width">
     <title>Demo</title>
     <link href="rich-text-editor.css" rel="stylesheet">
-    <style>
-    .rich-text-editor-view span {
-      display:inline-block;
-      vertical-align:middle;
-      border:1px solid #f00;
-      padding:1px;
-      line-height:1;
-    }
-    </style>
   </head>
   <body>
     <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
     <p>
-      <button onclick="editor.focus().w('span');">Toggle</button>
-      <button onclick="editor.focus().w('span', 1);">Force Wrap</button>
-      <button onclick="editor.focus().w('span', 0);">Force Unwrap</button>
+      <button onclick="editor.destroy();">Destroy</button>
+      <button onclick="editor = new RTE(document.querySelector('textarea'));">Create</button>
     </p>
     <script src="rich-text-editor.js"></script>
     <script>

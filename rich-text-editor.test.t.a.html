@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <link href="rich-text-editor.css" rel="stylesheet">
+  </head>
+  <body>
+    <p><textarea>Lorem ipsum dolor sit amet.
+
+http://example.com &larr; select this text then press the link tool!</textarea></p>
+    <script src="rich-text-editor.js"></script>
+    <script>
+
+    var editor = new RTE(document.querySelector('textarea'), {
+        tools: ['b', 'i', 'u', 'a', 'x']
+    });
+
+    </script>
+  </body>
+</html>

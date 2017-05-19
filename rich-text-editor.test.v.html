@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <link href="rich-text-editor.css" rel="stylesheet">
+  </head>
+  <body>
+    <p>Select the text below then press a button to show the result in your web console.</p>
+    <p><textarea>Lorem ipsum &lt;b&gt;dolor&lt;/b&gt; sit amet.
+
+Lorem ipsum dolor sit amet.</textarea></p>
+    <p>
+      <button onclick="console.log(editor.v());">Get Value as Text</button>
+      <button onclick="console.log(editor.v(true));">Get Value as HTML</button>
+      <button onclick="console.log(editor.v(true, false));">Get Raw HTML Value</button>
+      <button onclick="console.log(editor.v(true, true, false));">Get HTML Value Without the Paragraph Tag</button>
+    </p>
+    <script src="rich-text-editor.js"></script>
+    <script>
+
+    var editor = new RTE(document.querySelector('textarea'));
+
+    </script>
+  </body>
+</html>

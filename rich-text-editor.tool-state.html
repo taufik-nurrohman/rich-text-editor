@@ -29,21 +29,17 @@
     editor.view.onclick = update;
 
     function update() {
-        var e = editor.e(), tag;
-        if (e && e.nodeName) {
-            tag = e.nodeName.toLowerCase();
-            // remove all active class from the editor tool(s)
-            for (var i in editor.config.tools) {
-                i = editor.config.tools[i];
-                if (editor.t[i]) {
-                    editor.t[i].e.classList.remove(cn);
-                }
+        // remove all active class from the editor tool(s)
+        for (var i in editor.config.tools) {
+            i = editor.config.tools[i];
+            if (editor.t[i]) {
+                editor.t[i].e.classList.remove(cn);
             }
-            if (tag === 'strong') editor.t.b.e.classList.add(cn);
-            if (tag === 'em') editor.t.i.e.classList.add(cn);
-            if (tag === 'u') editor.t.u.e.classList.add(cn);
-            if (tag === 'a') editor.t.a.e.classList.add(cn);
         }
+        if (editor.is.e('strong')) editor.t.b.e.classList.add(cn);
+        if (editor.is.e('em')) editor.t.i.e.classList.add(cn);
+        if (editor.is.e('u')) editor.t.u.e.classList.add(cn);
+        if (editor.is.e('a')) editor.t.a.e.classList.add(cn);
         console.log('update');
     }
 

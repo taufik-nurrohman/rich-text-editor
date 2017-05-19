@@ -16,10 +16,10 @@
 
     var editor = new RTE(document.querySelector('textarea'));
 
-    editor.t('s', ['Delete', 'S'], function() {
+    editor.t('s', ['Delete', 'svg:M2 9.344v-1.344h12v1.344h-12zM3.344 2.656h9.313v2h-3.313v2h-2.688v-2h-3.313v-2zM6.656 12.656v-2h2.688v2h-2.688z'], function() {
         editor.w('del', -1, 'text goes here…');
         console.log(arguments);
-    });
+    }, -1);
 
     </script>
   </body>

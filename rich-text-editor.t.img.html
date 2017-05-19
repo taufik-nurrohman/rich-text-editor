@@ -32,7 +32,7 @@
         ]
     });
 
-    editor.t('img', ['Insert Image', '🖼'], function() {
+    editor.t('img', ['Insert Image', 'svg:M5.656 9l-2.313 3h9.313l-3-4-2.313 3zM14 12.656c0 0.719-0.625 1.344-1.344 1.344h-9.313c-0.719 0-1.344-0.625-1.344-1.344v-9.313c0-0.719 0.625-1.344 1.344-1.344h9.313c0.719 0 1.344 0.625 1.344 1.344v9.313z'], function() {
         var img = window.getSelection().getRangeAt(0).cloneContents(),
             src = "";
         img = img.firstChild;

@@ -43,6 +43,17 @@
   color:#00f;
   text-decoration:none;
 }
+.rich-text-editor-tool svg {
+  display:inline-block;
+  vertical-align:middle;
+  width:1em;
+  height:1em;
+  line-height:1em;
+  font-weight:normal;
+  font-style:normal;
+  text-decoration:none;
+  fill:currentColor;
+}
 .rich-text-editor-tool a:focus,
 .rich-text-editor-tool a:hover {background:#eff}
 .rich-text-editor-view {
@@ -70,17 +81,15 @@
   width:100%;
   min-height:8em;
   background:#def;
+  font:inherit;
   font-family:'Courier New',Courier,'Nimbus Mono L',Monospace;
-  padding:1px 4px;
+  padding:.25em .5em;
   resize:vertical;
   overflow:auto;
   display:none;
 }
 .rich-text-editor.source .rich-text-editor-view {display:none}
 .rich-text-editor.source .rich-text-editor-source {display:block}
-.rich-text-editor-t\:b span {font-weight:bold}
-.rich-text-editor-t\:i span {font-style:italic}
-.rich-text-editor-t\:u span {text-decoration:underline}
 
 /* dialog */
 .rich-text-editor-dialog {
@@ -132,6 +141,8 @@
 .rich-text-editor-view b,
 .rich-text-editor-view strong {font-weight:bold}
 .rich-text-editor-view i,
-.rich-text-editor-view em {font-style:italic}
+.rich-text-editor-view em,
+.rich-text-editor-view dfn,
+.rich-text-editor-view var {font-style:italic}
 .rich-text-editor-view u,
 .rich-text-editor-view ins {text-decoration:underline}

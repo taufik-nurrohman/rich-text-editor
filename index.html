@@ -11,7 +11,9 @@
     body {
       padding:.5em;
       margin:0;
-      font:normal normal 13px/1.5 Helmet,FreeSans,Sans-Serif;
+      font:normal normal 18px/1.5 Helmet,FreeSans,Sans-Serif;
+      background:#ffa;
+      color:#000;
     }
     a {
       color:#00f;
@@ -21,28 +23,36 @@
   </head>
   <body>
     <form method="get">
-      <p><textarea name="content" placeholder="Content goes here&hellip;">&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;</textarea></p>
+      <p><textarea name="content" placeholder="Content goes here&hellip;">&lt;p&gt;&lt;strong style=&quot;font-size:150%;&quot;&gt;Rich Text Editor&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;A rich text editor that is designed to accept &lt;em&gt;only&lt;/em&gt; limited set of inline &lt;abbr title=&quot;Hyper Text Markup Language&quot;&gt;HTML&lt;/abbr&gt; tags.&lt;br&gt;Works best to be used on any editors that are accessible in the public such as comment form in a blog or &lt;abbr title=&quot;Question/Answer&quot;&gt;Q/A&lt;/abbr&gt; form in a forum.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Features&lt;/strong&gt;&lt;br&gt;• Tools: &lt;em&gt;Bold&lt;/em&gt;, &lt;em&gt;Italic&lt;/em&gt;, &lt;em&gt;Underline&lt;/em&gt;, &lt;em&gt;Link&lt;/em&gt;, &lt;em&gt;Source&lt;/em&gt;&lt;br&gt;• Keyboard Shortcut such as: &lt;kbd&gt;⌘+B&lt;/kbd&gt; for Bold&lt;br&gt;• HTML5 Output&lt;br&gt;• Simple &lt;abbr title=&quot;Application Programming Interface&quot;&gt;API&lt;/abbr&gt;&lt;br&gt;• Option to Disable the &lt;kbd&gt;Enter&lt;/kbd&gt; Key&lt;br&gt;• &lt;abbr title=&quot;Cross-Site Scripting&quot;&gt;XSS&lt;/abbr&gt; Protection.&lt;/p&gt;</textarea></p>
       <p><button type="submit">Submit</button></p>
     </form>
     <h2>Examples</h2>
     <ul>
-      <li><a href="rich-text-editor.html">No Idea?</a></li>
-      <li><a href="rich-text-editor.enter-x.html">Disable Enter Key</a></li>
-      <li><a href="rich-text-editor.tool-x.html">Hide Editor Tools</a></li>
-      <li><a href="rich-text-editor.tool-v.html">Show Editor Tools</a></li>
-      <li><a href="rich-text-editor.tool-custom.html">Custom Editor Tools</a></li>
-      <li><a href="rich-text-editor.t.img.html">Insert Image (Still Buggy)</a></li>
-      <li><a href="rich-text-editor.tool-state.html">Tool State (Still Buggy)</a></li>
-      <li><a href="rich-text-editor.tool.trigger.html">Trigger Editor Tools</a></li>
+      <li><a href="rich-text-editor.html" target="_blank">No Idea?</a></li>
+      <li><a href="rich-text-editor.enter-x.html" target="_blank">Disable Enter Key</a></li>
+      <li><a href="rich-text-editor.tool-x.html" target="_blank">Hide Editor Tools</a></li>
+      <li><a href="rich-text-editor.tool-v.html" target="_blank">Show Editor Tools</a></li>
+      <li><a href="rich-text-editor.tool-top.html" target="_blank">Put Editor Tools on Top</a></li>
+      <li><a href="rich-text-editor.tool-custom.html" target="_blank">Custom Editor Tools</a></li>
+      <li><a href="rich-text-editor.t.img.html" target="_blank">Insert Image (Still Buggy)</a></li>
+      <li><a href="rich-text-editor.tool-state.html" target="_blank">Tool State (Still Buggy)</a></li>
+      <li><a href="rich-text-editor.tool.trigger.html" target="_blank">Trigger Editor Tools</a></li>
     </ul>
     <h2>Tests</h2>
     <ul>
-      <li><a href="rich-text-editor.test.t.html">Test Tool</a></li>
-      <li><a href="rich-text-editor.test.t-i.html">Test Tool Index</a></li>
-      <li><a href="rich-text-editor.test.d.html">Test Dialog</a></li>
-      <li><a href="rich-text-editor.test.i.html">Test Insert</a></li>
-      <li><a href="rich-text-editor.test.w.html">Test Wrap</a></li>
-      <li><a href="rich-text-editor.test.is.html">Test State</a></li>
+      <li><a href="rich-text-editor.test.t.html" target="_blank">Test Tool</a></li>
+      <li><a href="rich-text-editor.test.t.a.html" target="_blank">Test Link Tool</a></li>
+      <li><a href="rich-text-editor.test.focus.html" target="_blank">Test Focus</a></li>
+      <li><a href="rich-text-editor.test.paste.html" target="_blank">Test Paste</a></li>
+      <li><a href="rich-text-editor.test.v.html" target="_blank">Test Get Selection Value</a></li>
+      <li><a href="rich-text-editor.test.t-i.html" target="_blank">Test Tool Index</a></li>
+      <li><a href="rich-text-editor.test.d.html" target="_blank">Test Dialog</a></li>
+      <li><a href="rich-text-editor.test.i.html" target="_blank">Test Insert</a></li>
+      <li><a href="rich-text-editor.test.w.html" target="_blank">Test Wrap</a></li>
+      <li><a href="rich-text-editor.test.is.html" target="_blank">Test State</a></li>
+      <li><a href="rich-text-editor.test.destroy.html" target="_blank">Test Destroy</a></li>
     </ul>
     <script src="rich-text-editor.js"></script>
     <script>
