@@ -177,7 +177,7 @@ editor.i('<img arc="file.png">', 1); // put caret before the inserted HTML (inse
 ### Get Selected HTML Node
 
 ~~~ .js
-editor.e('a'); // check if the selected text is an link
+editor.e('a'); // check if the selected text is an `<a>` tag
 ~~~
 
 ### Sanitize HTML
