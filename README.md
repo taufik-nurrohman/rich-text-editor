@@ -63,7 +63,7 @@ config = {
         'span',
         'strong',
         'u',
-        'var
+        'var'
     ],
     text: {
         b: ['Bold', 'B', '⌘+B'],
@@ -137,8 +137,8 @@ editor.r(s);
 ~~~ .js
 editor.v(); // as plain text
 editor.v(true); // as HTML
-editor.v(true, true, true); // as HTML and remove the wrapping `<p>` tag
 editor.v(true, false); // as original selected HTML value in `editor.view`
+editor.v(true, true, false); // as HTML and remove the wrapping `<p>` tag
 ~~~
 
 ### Wrap Selection with HTML Element
