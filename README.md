@@ -222,6 +222,10 @@ editor.d(placeholder, value, fn);
 editor.d.v();
 ~~~
 
+~~~ .js
+editor.d.v(true); // save previous selection
+~~~
+
 #### Hide
 
 ~~~ .js
@@ -240,6 +244,9 @@ Check whether these elements are visible at the time:
 editor.is.view; // the rich text editor view
 editor.is.source; // the HTML source view
 editor.is.d; // the dialog view
+~~~
+
+~~~ .js
 editor.is.focus; // check if cursor is active in the view
-editor.is.blur; // check if cursor is inactive in the view
+editor.is.blur; // check if cursor is not active in the view
 ~~~
