@@ -150,7 +150,7 @@ editor.w('strong', 0); // force unwrap `<strong>` tag
 editor.w('strong', -1, 'text goes here…'); // insert `text goes here…` text if no text was selected
 ~~~
 
-Wrap selection with HTML element and add attributes on it:
+Wrap selection with HTML element and add attributes on that element:
 
 ~~~ .js
 var e = editor.w('a');
