@@ -93,8 +93,6 @@
   width:100%;
   min-height:8em;
   background:#def;
-  border-bottom:1px solid;
-  border-color:inherit;
   font:inherit;
   font-family:'Courier New',Courier,'Nimbus Mono L',Monospace;
   padding:.25em .5em;
