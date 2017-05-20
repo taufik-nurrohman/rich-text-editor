@@ -381,7 +381,7 @@
                     if (i === 0 || (i === -1 && a)) {
                         if (a && (d = a[html])) {
                             a[parent][remove](a);
-                            if (b && d[pos](b) !== -1) {
+                            if (b && d[pos](b) !== -1 && b[len] < d[len]) {
                                 // `<$t>a[b]c</$t>` → `<$t>a</$t>b<$t>c</$t>`
                                 selection_i('<' + t + '>' + d[chop](0, d[pos](b)) + '</' + t + '>', 0);
                                 c = selection_i(b, 0);
