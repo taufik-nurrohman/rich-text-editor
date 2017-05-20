@@ -187,6 +187,7 @@ editor.i('<img arc="file.png">', 1); // put caret before the inserted HTML (inse
 ### Get Selected HTML Node
 
 ~~~ .js
+editor.e();
 editor.e('a'); // check if the selected text is an `<a>` tag
 ~~~
 
@@ -212,9 +213,7 @@ editor.f('foo bar <b>baz</b> <span>qux</span>');
 Create a bold button:
 
 ~~~ .js
-editor.t('b', ['Bold', '<b>B</b>', 'Ctrl+B'], function(e, $, node) {
-    
-});
+editor.t('b', ['Bold', '<b>B</b>', 'Ctrl+B'], function(e, $, node) { … });
 ~~~
 
 ### Dialog
@@ -263,4 +262,5 @@ editor.is.d; // the dialog view
 ~~~ .js
 editor.is.focus; // check if cursor is active in the view
 editor.is.blur; // check if cursor is not active in the view
+editor.is.error; // check if there was an error
 ~~~
