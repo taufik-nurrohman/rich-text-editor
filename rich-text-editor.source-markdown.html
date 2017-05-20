@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <link href="rich-text-editor.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <h1>Convert HTML Source to Markdown</h1>
+    <p><textarea>Lorem ipsum **dolor** sit amet.</textarea></p>
+    <p><button onclick="console.log(editor.get());">Get Value</button></p>
+    <script src="rich-text-editor.min.js"></script>
+    <script>
+
+    // RMTE: Rich Markdown Text Editor
+    var RMTE = function(target, config) {
+
+        var $ = new RTE(target, config);
+
+        // HTML to Markdown
+        $.HTML_Markdown = function(content) {
+            function _(s, t, content) {
+                return content.replace(new RegExp('<' + s + '(?:\\s[^<>]*?)?>([\\s\\S]*?)<\\/' + s + '>', 'g'), function($, a) {
+                    return t + a.replace(/([*_`~])/g, '\\$1') + t;
+                });
+            }
+            content = _('strong', '**', content);
+            content = _('em', '_', content);
+            content = _('code', '`', content);
+            content = _('del', '~~', content); // GFM
+            content = content.replace(/<a(\s[^<>]*?)?>([\s\S]*?)<\/a>/g, function($, a, b) {
+                var href = (a.match(/ href="((?:\\"|[^"])*?)"/i) || [])[1],
+                    title = (a.match(/ title="((?:\\"|[^"])*?)"/i) || [])[1] || "";
+                return '[' + b.replace(/\n/g, ' ') + '](' + href + (title ? ' "' + title + '"' : "") + ')';
+            });
+            content = content.replace(/(?:<br(\s[^<>]*?)?\s*\/?>){2,}/g, '\n\n');
+            content = content.replace(/<br(\s[^<>]*?)?\s*\/?>/g, '  \n'); // hard break
+            content = content.replace(/<\/p>\s*<p(\s[^<>]*?)?>/g, '\n\n');
+            content = content.replace(/<\/p>|<p(\s[^<>]*?)?>/g, "");
+            return content;
+        };
+
+        // Markdown to HTML
+        $.Markdown_HTML = function(content) {
+            function _(s, t, content) {
+                s = s.replace(/./g, '\\$&');
+                return content.replace(new RegExp(s + '((?:\\\\.|[^' + s[1] + '\\n\\\\])*?)' + s, 'g'), function($, a) {
+                    return '<' + t + '>' + a.replace(/\\([*_`~])/g, '$1') + '</' + t + '>';
+                });
+            }
+            content = _('**', 'strong', content);
+            content = _('_', 'em', content);
+            content = _('`', 'code', content);
+            content = _('~~', 'del', content); // GFM
+            content = content.replace(/\[(.*?)\]\(([^\s]*?)(\s.*?)?\)/g, function($, a, b, c) {
+                if (c) {console.log(c)
+                    c = c.replace(/^\s+"((?:\\"|[^"])*?)"/, ' title="$1"');
+                }
+                return '<a href="' + b + '"' + (c || "") + '>' + a + '</a>';
+            });
+            content = content.replace(/<\/p>\s*<p(\s[^<>]*?)?>/g, '\n\n');
+            content = content.replace(/<\/p>|<p(\s[^<>]*?)?>/g, "");
+            content = content.replace(/<br(\s[^<>]*?)?\s*\/?>/g, '\n');
+            content = content.replace(/\n\n\n*/g, '<br><br>'); // create the fake `<p>` tag(s) for editor view
+            content = content.replace(/  \n/g, '<br>'); // line break
+            return content;
+        };
+
+        // Re-write the filter function
+        $.f = $.HTML_Markdown;
+
+        // Convert Markdown to HTML
+        $.view.innerHTML = $.Markdown_HTML($.get("", 0));
+        $.source.addEventListener("blur", function() {
+            $.view.innerHTML = $.Markdown_HTML($.get("", 0));
+        }, false);
+        $.view.addEventListener("paste", function() {
+            setTimeout(function() {
+                var v = $.get("", 0);
+                $.set("");
+                $.i($.Markdown_HTML(v));
+            }, 1);
+        }, false);
+
+        return $;
+
+    };
+
+    </script>
+    <script>
+    var editor = new RMTE(document.querySelector('textarea'), {
+        tools: ['b', 'i', 'a', 'x']
+    });
+    </script>
+  </body>
+</html>

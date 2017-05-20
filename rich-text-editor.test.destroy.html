@@ -7,15 +7,17 @@
     <link href="rich-text-editor.css" rel="stylesheet">
   </head>
   <body>
-    <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
+    <p><mark>previous</mark></p>
+    <p><mark>before</mark><textarea>Lorem ipsum dolor sit amet.</textarea><mark>after</mark></p>
+    <p><mark>next</mark></p>
     <p>
+      <button onclick="editor.create();">Create</button>
       <button onclick="editor.destroy();">Destroy</button>
-      <button onclick="editor = new RTE(document.querySelector('textarea'));">Create</button>
     </p>
     <script src="rich-text-editor.js"></script>
     <script>
 
-    var editor = new RTE(document.querySelector('textarea'));
+    var editor = (new RTE(document.querySelector('textarea'))).destroy();
 
     </script>
   </body>

@@ -65,6 +65,16 @@ config = {
         'u',
         'var'
     ],
+    attributes: [
+        'class',
+        'data-[\\w-]+?',
+        'href',
+        'id',
+        'rel',
+        'style',
+        'target',
+        'title'
+    ],
     text: {
         b: ['Bold', 'B', '⌘+B'],
         i: ['Italic', 'I', '⌘+I'],
@@ -73,13 +83,13 @@ config = {
         x: ['Source', '&#x22ef;', '⌘+⇧+X']
     },
     tidy: true, // tidy HTML output?
-    enter: true, // change to `false` to automatically submit the closest form on enter key press
-    x: function(e, $, node) {}, // on change editor mode (view or source)
+    enter: true, // set to `false` to automatically submit the closest form on enter key press
+    x: function(e, $, node) {}, // on change editor mode (view/source); set to `false` to disable the source view
     update: function(e, $, node) {} // on view/source update
 };
 ~~~
 
-> **Note:** All block tags are not allowed except `<p>`.
+> **Note:** All block tags are not allowed except `<p>` tags without attributes.
 
 Methods
 -------
@@ -234,6 +244,10 @@ editor.d.x();
 
 ~~~ .js
 editor.d.x(true); // restore previous selection
+~~~
+
+~~~ .js
+editor.d.x(true, true); // ignore the error, exit anyway
 ~~~
 
 ### State

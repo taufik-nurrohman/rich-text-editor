@@ -10,7 +10,8 @@
     </style>
   </head>
   <body>
-    <textarea>Lorem ipsum dolor sit amet.</textarea>
+    <h1>Custom Tool: Abbreviation</h1>
+    <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
     <script src="rich-text-editor.min.js"></script>
     <script>
 
@@ -21,6 +22,10 @@
             abbr = previous_abbr || editor.w('abbr', 1, 'text here…'); // force wrap
         if (editor.is.d) {
             editor.d.x(true); // cancel
+            abbr = editor.e('abbr');
+            if (abbr && !abbr.title) {
+                editor.w('abbr', 0); // force unwrap
+            }
         } else {
             editor.d('Meaning here…', abbr && abbr.title || "", function(e, $, input) {
                 if (input.value) {

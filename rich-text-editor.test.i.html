@@ -9,9 +9,9 @@
   <body>
     <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
     <p>
-      <button onclick="editor.i('<mark>before</mark>', 0);editor.view.focus();">Insert Before</button>
-      <button onclick="editor.i('<mark>after</mark>', 1);editor.view.focus();">Insert After</button>
-      <button onclick="editor.i('<mark>content</mark>', true);editor.view.focus();">Insert &amp; Select</button>
+      <button onclick="editor.focus().i('<mark>before</mark>', 0);">Insert Before</button>
+      <button onclick="editor.focus().i('<mark>after</mark>', 1);">Insert After</button>
+      <button onclick="editor.focus().i('<mark>content</mark>', true);">Insert &amp; Select</button>
     </p>
     <script src="rich-text-editor.js"></script>
     <script>

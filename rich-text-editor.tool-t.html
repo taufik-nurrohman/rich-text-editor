@@ -9,9 +9,9 @@
   <body>
     <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
     <p>
-      <button onclick="editor.t.b(null, editor, this);">Bold</button>
-      <button onclick="editor.t.i(null, editor, this);">Italic</button>
-      <button onclick="editor.t.u(null, editor, this);">Underline</button>
+      <button onclick="editor.focus().t.b(null, editor, this);">Bold</button>
+      <button onclick="editor.focus().t.i(null, editor, this);">Italic</button>
+      <button onclick="editor.focus().t.u(null, editor, this);">Underline</button>
     </p>
     <script src="rich-text-editor.min.js"></script>
     <script>

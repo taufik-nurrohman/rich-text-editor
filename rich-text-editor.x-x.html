@@ -5,19 +5,18 @@
     <meta name="viewport" content="width=device-width">
     <title>Demo</title>
     <link href="rich-text-editor.min.css" rel="stylesheet">
-    <style>
-    .rich-text-editor-tool {display:none}
-    </style>
   </head>
   <body>
-    <h1>Hide Editor Tools</h1>
-    <p>Always hide the editor tools with <abbr title="Cascading Style Sheet">CSS</abbr>.</p>
+    <h1>Disable the Source View</h1>
+    <p>Pressing <kbd>&#x2318;+&#x21E7;+X</kbd> in a text selection will trigger the page direction changes in <em>Firefox 53.0.2</em>.</p>
     <form method="get">
       <p><textarea name="content" placeholder="Write a comment&hellip;"></textarea></p>
     </form>
     <script src="rich-text-editor.min.js"></script>
     <script>
-    var editor = new RTE(document.querySelector('textarea'));
+    var editor = new RTE(document.querySelector('textarea'), {
+        x: false
+    });
     </script>
   </body>
 </html>

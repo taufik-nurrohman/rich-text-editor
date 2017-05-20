@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <link href="rich-text-editor.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <h1>Custom Tool: Font</h1>
+    <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
+    <script src="rich-text-editor.min.js"></script>
+    <script>
+
+    var editor = new RTE(document.querySelector('textarea')),
+
+        font_sizes = [false, 25, 50, 75, 100, 125, 150, 175, 200, 250, 275, 300],
+        font_sizes_count = font_sizes.length,
+        font_sizes_i = 0,
+
+        font_faces = [
+            false, // inherit
+            'arial,sans-serif',
+            'times new roman,serif',
+            'georgia,serif',
+            'verdana,sans-serif',
+            'tahoma,sans-serif',
+            'trebuchet ms,sans-serif',
+            'courier new,courier,monospace'
+        ],
+        font_faces_count = font_faces.length,
+        font_faces_i = 0;
+
+    // font size
+    editor.t('font', ['Font Size', 'svg:M2 8v-2h6v2h-2v4.656h-2v-4.656h-2zM6 2.656h8.656v2h-3.313v8h-2v-8h-3.344v-2z'], function() {
+        var font = editor.e('span') || editor.w('span', 1); // force wrap
+        ++font_sizes_i;
+        if (font_sizes_i > font_sizes_count - 1) {
+            font_sizes_i = 0;
+        }
+        if (font_sizes_i !== 0) {
+            font.style.fontSize = font_sizes[font_sizes_i] + '%';
+        } else {
+            font.style.fontSize = "";
+            if (!font.getAttribute('style')) {
+                editor.w('span', 0); // force unwrap
+            }
+        }
+    }, -1);
+
+    // font family
+    editor.t('font', ['Font Family', 'svg:M10.625 12.344h1.406l-3.406-8.688h-1.25l-3.406 8.688h1.406l0.75-2h3.75zM13.344 1.344c0.719 0 1.313 0.594 1.313 1.313v10.688c0 0.719-0.594 1.313-1.313 1.313h-10.688c-0.719 0-1.313-0.594-1.313-1.313v-10.688c0-0.719 0.594-1.313 1.313-1.313h10.688zM6.625 9l1.375-3.688 1.375 3.688h-2.75z'], function() {
+        var font = editor.e('span') || editor.w('span', 1); // force wrap
+        ++font_faces_i;
+        if (font_faces_i > font_faces_count - 1) {
+            font_faces_i = 0;
+        }
+        if (font_faces_i !== 0) {
+            font.style.fontFamily = font_faces[font_faces_i];
+        } else {
+            font.style.fontFamily = "";
+            if (!font.getAttribute('style')) {
+                editor.w('span', 0); // force unwrap
+            }
+        }
+    }, -1);
+
+    </script>
+  </body>
+</html>

@@ -10,7 +10,8 @@
     </style>
   </head>
   <body>
-    <textarea>Lorem ipsum dolor sit amet.</textarea>
+    <h1>Custom Tool: Color</h1>
+    <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
     <script src="rich-text-editor.min.js"></script>
     <script>
 
@@ -22,6 +23,10 @@
             color = previous_color || editor.w('span', 1); // force wrap
         if (editor.is.d) {
             editor.d.x(true); // cancel
+            color = editor.e('span');
+            if (color && !color.getAttribute('style')) {
+                editor.w('span', 0); // force unwrap
+            }
         } else {
             editor.d('#FFFFFF', color && color.style.color || "", function(e, $, input) {
                 color.style.color = input.value;
@@ -38,8 +43,12 @@
             color = previous_color || editor.w('span', 1); // force wrap
         if (editor.is.d) {
             editor.d.x(true); // cancel
+            color = editor.e('span');
+            if (color && !color.getAttribute('style')) {
+                editor.w('span', 0); // force unwrap
+            }
         } else {
-            editor.d('#FFFFFF', color && color.style.backgroundColor || "", function(e, $, input) {
+            editor.d('#000000', color && color.style.backgroundColor || "", function(e, $, input) {
                 color.style.backgroundColor = input.value;
                 if (!input.value && !color.getAttribute('style')) {
                     editor.w('span', 0); // force unwrap

@@ -14,6 +14,18 @@
   -moz-box-sizing:border-box;
   box-sizing:border-box;
 }
+.rich-text-editor ::-webkit-input-placeholder {
+  opacity:.5;
+  color:inherit;
+}
+.rich-text-editor ::-moz-placeholder {
+  opacity:.5;
+  color:inherit;
+}
+.rich-text-editor ::placeholder {
+  opacity:.5;
+  color:inherit;
+}
 .rich-text-editor {
   border:1px solid #000;
   background:#fff;
@@ -81,6 +93,8 @@
   width:100%;
   min-height:8em;
   background:#def;
+  border-bottom:1px solid;
+  border-color:inherit;
   font:inherit;
   font-family:'Courier New',Courier,'Nimbus Mono L',Monospace;
   padding:.25em .5em;
@@ -92,7 +106,7 @@
 .rich-text-editor.source .rich-text-editor-source {display:block}
 
 /* dialog */
-.rich-text-editor-dialog {
+.rich-text-editor-d {
   background:inherit;
   border:inherit;
   border-width:0;
@@ -102,8 +116,9 @@
   bottom:2em;
   left:0;
   padding:1em;
+  display:none;
 }
-.rich-text-editor-dialog input {
+.rich-text-editor-d input {
   display:inline-block;
   vertical-align:middle;
   width:12em;
@@ -117,6 +132,10 @@
   margin:0;
   padding:0 0 .25em;
 }
+.rich-text-editor.d .rich-text-editor-d {display:block}
+
+/* error state */
+.rich-text-editor.error {border-color:#f00}
 
 /* editor placeholder */
 .rich-text-editor-view:empty:before {

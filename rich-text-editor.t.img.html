@@ -7,7 +7,8 @@
     <link href="rich-text-editor.min.css" rel="stylesheet">
   </head>
   <body>
-    <textarea>Lorem ipsum dolor sit amet.</textarea>
+    <h1>Custom Tool: Image</h1>
+    <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
     <script src="rich-text-editor.min.js"></script>
     <script>
 
@@ -29,19 +30,36 @@
             'span',
             'strong',
             'u'
+        ],
+        attributes: [
+            'alt', // add `alt` to the attribute list
+            'class',
+            'href',
+            'id',
+            'rel',
+            'src', // add `src` to the attribute list
+            'style',
+            'target',
+            'title'
         ]
     });
 
     editor.t('img', ['Insert Image', 'svg:M5.656 9l-2.313 3h9.313l-3-4-2.313 3zM14 12.656c0 0.719-0.625 1.344-1.344 1.344h-9.313c-0.719 0-1.344-0.625-1.344-1.344v-9.313c0-0.719 0.625-1.344 1.344-1.344h9.313c0.719 0 1.344 0.625 1.344 1.344v9.313z'], function() {
-        var img = window.getSelection().getRangeAt(0).cloneContents(),
+        var img = editor.$$(1).cloneContents(),
             src = "";
         img = img.firstChild;
         if (img && img.nodeName.toLowerCase() === 'img') {
             src = img.getAttribute('src') || "";
         }
-        editor.d('favicon.ico', src, function(e, $, input) {
-            editor.i('<br><br><img alt="" src="' + input.value + '"><br><br>', 0);
-        });
+        if (editor.is.d) {
+            editor.d.x(true); // cancel
+        } else {
+            editor.d('favicon.ico', src, function(e, $, input) {
+                if (input.value) {
+                    editor.i('<br><br><img alt="" src="' + input.value + '"><br><br>', 0);
+                }
+            });
+        }
     }, -1);
 
     </script>

@@ -5,9 +5,35 @@
     <meta name="viewport" content="width=device-width">
     <title>Demo</title>
     <link href="rich-text-editor.css" rel="stylesheet">
+    <style>
+    .debug {
+      display:inline-block;
+      vertical-align:middle;
+      line-height:1;
+      padding:1em;
+    }
+    .debug.view {background-color:aqua}
+    .debug.source {background-color:bisque}
+    .debug.d {background-color:burlywood}
+    .debug.focus {box-shadow:0 0 5px blue}
+    .debug.error {box-shadow:0 0 5px red}
+    .rich-text-editor {border-width:10px}
+    .rich-text-editor.view {border-color:aqua}
+    .rich-text-editor.source {border-color:bisque}
+    .rich-text-editor.d {border-color:burlywood}
+    .rich-text-editor.focus {box-shadow:0 0 5px blue}
+    .rich-text-editor.error {box-shadow:0 0 5px red}
+    </style>
   </head>
   <body>
-    <textarea>Lorem ipsum dolor sit amet.</textarea>
+    <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
+    <p>
+      <span class="debug view">view</span>
+      <span class="debug source">source</span>
+      <span class="debug d">d</span>
+      <span class="debug focus">focus</span>
+      <span class="debug error">error</span>
+    </p>
     <script src="rich-text-editor.js"></script>
     <script>
 
@@ -17,6 +43,14 @@
             console.log(editor.is);
         }
     });
+
+    editor.view.onfocus = function() {
+        console.log(editor.is);
+    };
+
+    editor.view.onblur = function() {
+        console.log(editor.is);
+    };
 
     </script>
   </body>
