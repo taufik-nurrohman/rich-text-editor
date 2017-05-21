@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  RICH TEXT EDITOR 1.0.7
+ *  RICH TEXT EDITOR 1.1.0
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -20,29 +20,28 @@
     var instance = '__instance__',
         create = 'create',
         style = 'style',
-        minh = 'minHeight',
-        html = 'innerHTML',
-        cla = 'className',
-        event_s = 'addEventListener',
-        event_r = 'removeEventListener',
-        append = 'appendChild',
-        remove = 'removeChild',
-        parent = 'parentNode',
-        child = 'children',
-        childn = 'childNodes',
-        first = 'firstChild',
-        insert = 'insertBefore',
-        node = 'nodeName',
-        get = 'getAttribute',
-        set = 'setAttribute',
-        reset = 'removeAttribute',
-        re = 'replace',
-        rec = re + 'Child',
-        val = 'value',
-        len = 'length',
-        pos = 'indexOf',
-        chop = 'substring',
-        stop = 'preventDefault',
+        minHeight = 'minHeight',
+        innerHTML = 'innerHTML',
+        className = 'className',
+        addEventListener = 'addEventListener',
+        removeEventListener = 'removeEventListener',
+        appendChild = 'appendChild',
+        removeChild = 'removeChild',
+        parentNode = 'parentNode',
+        children = 'children',
+        childNodes = 'childNodes',
+        firstChild = 'firstChild',
+        insertBefore = 'insertBefore',
+        nodeName = 'nodeName',
+        getAttribute = 'getAttribute',
+        setAttribute = 'setAttribute',
+        removeAttribute = 'removeAttribute',
+        replace = 'replace',
+        value = 'value',
+        length = 'length',
+        indexOf = 'indexOf',
+        substring = 'substring',
+        preventDefault = 'preventDefault',
         click = 'click',
         focus = 'focus',
         blur = 'blur',
@@ -51,38 +50,38 @@
         paste = 'paste',
         error = 'error',
         test = 'test',
-        editable = 'contenteditable',
-        readonly = 'readonly',
-        spellcheck = 'spellcheck',
+        contentEditable = 'contenteditable',
+        readOnly = 'readonly',
+        spellCheck = 'spellcheck',
         placeholder = 'placeholder',
-        $s, $r,
-        $s_ = 'getSelection',
-        $s_at = 'getRangeAt',
-        $s_i = 'rangeCount',
-        $s_set = 'addRange',
-        $s_reset = 'removeAllRanges',
-        $r_ = create + 'Range',
-        $r_copy = 'cloneContents',
-        $r_delete = 'deleteContents',
-        $r_select_node = select + 'Node',
-        $r_select_content = $r_select_node + 'Contents',
-        $r_insert = 'insertNode',
-        $r_clone = 'cloneRange',
-        $r_collapse = 'collapse',
-        $r_start = 'setStart',
-        $r_end = 'setEnd',
-        $r_start_0 = $r_start + 'Before',
-        $r_start_1 = $r_start + 'After',
-        $r_end_0 = $r_end + 'Before',
-        $r_end_1 = $r_end + 'After',
+        getSelection = 'getSelection',
+        getRangeAt = 'getRangeAt',
+        rangeCount = 'rangeCount',
+        addRange = 'addRange',
+        removeAllRanges = 'removeAllRanges',
+        createRange = create + 'Range',
+        cloneContents = 'cloneContents',
+        deleteContents = 'deleteContents',
+        selectNode = select + 'Node',
+        selectNodeContents = selectNode + 'Contents',
+        insertNode = 'insertNode',
+        cloneRange = 'cloneRange',
+        collapse = 'collapse',
+        setStart = 'setStart',
+        setEnd = 'setEnd',
+        setStartBefore = setStart + 'Before',
+        setStartAfter = setStart + 'After',
+        setEndBefore = setEnd + 'Before',
+        setEndAfter = setEnd + 'After',
         tru = true,
         fals = false,
         nul = null,
-        CTRL = 'ctrlKey',
-        SHIFT = 'shiftKey',
-        ALT = 'altKey',
-        KEYC = 'keyCode',
-        delay = setTimeout;
+        ctrlKey = 'ctrlKey',
+        shiftKey = 'shiftKey',
+        altKey = 'altKey',
+        keyCode = 'keyCode',
+        delay = setTimeout,
+        $s, $r;
 
     function el(x) {
         return doc[create + 'Element'](x);
@@ -90,6 +89,10 @@
 
     function lc(s) {
         return s.toLowerCase();
+    }
+
+    function is_string(x) {
+        return typeof x === "string";
     }
 
     function is_text(x) {
@@ -108,28 +111,44 @@
         return new RegExp(a, b);
     }
 
+    function join(x, s) {
+        return x.join(s || "");
+    }
+
     function ev_s(a, b, f) {
-        return a[event_s](b, f, fals);
+        return a[addEventListener](b, f, fals);
     }
 
     function ev_r(a, b, f) {
-        return a[event_r](b, f);
+        return a[removeEventListener](b, f);
     }
 
     function fragment(s) {
         var a = el('div'),
-            b = doc[create + 'DocumentFragment'](), c, d;
-        a[html] = s;
-        while (c = a[first]) {
-            d = b[append](c);
+            b = doc[create + 'DocumentFragment'](),
+            c = [], d;
+        if (is_string(s)) {
+            a[innerHTML] = s;
+            while (d = a[firstChild]) {
+                c.push(b[appendChild](d));
+            }
+            return [c, b]; // [node(s), container]
         }
-        return [b[first], d, b]; // [first, last, container]
+        for (d in s) {
+            d = s[d];
+            if (is_string(d)) {
+                a[innerHTML] = d;
+                d = a[firstChild];
+            }
+            b[appendChild](d);
+        }
+        return [s, b]; // [node(s), container]
     }
 
     (function($) {
 
         // plugin version
-        $.version = '1.0.7';
+        $.version = '1.1.0';
 
         // collect all instance(s)
         $[instance] = {};
@@ -157,7 +176,8 @@
             svg_suf = '"></path></svg>',
             config = {
                 classes: ['rich-text-editor'],
-                tags: ['a', 'abbr', 'b', 'br', 'code', 'dfn', 'del', 'em', 'i', 'ins', 'kbd', 'mark', 'p', 'span', 'strong', 'u', 'var'],
+                tags: ['a(?:bbr)?|br?|code|d(?:fn|el)|em|i(?:ns)?|kbd|mark|p|span|strong|u|var'],
+                blocks: ['a(?:rticle|side)|blockquote|(?:fig)?caption|figure|h(?:[1-6]|eader)|div|li|[ou]l|p(?:re)?|section|t(?:able|[dh])'],
                 attributes: ['class', 'data-[\\w-]+?', 'href', 'id', 'rel', 'style', 'target', 'title'],
                 tools: ['b', 'i', 'u', 'x'],
                 text: {
@@ -190,88 +210,110 @@
             dialog_fn, t, i;
 
         function $s_get() {
-            $s = win[$s_] && win[$s_]() || {};
-            return $s[$s_i] && $s || nul;
+            $s = win[getSelection] && win[getSelection]() || {};
+            return $s[rangeCount] && $s || nul;
         }
 
         function $r_get(r) {
             $s = $s_get();
-            return $s && $s[$s_at](r || 0) || nul;
+            return $s && $s[getRangeAt](r || 0) || nul;
         }
 
         function selection_v(h, x, p) {
             if (h) {
                 if ($s = $s_get()) {
                     var container = el('div'), i, j;
-                    for (i = 0, j = $s[$s_i]; i < j; ++i) {
-                        container[append]($s[$s_at](i)[$r_copy]());
+                    for (i = 0, j = $s[rangeCount]; i < j; ++i) {
+                        container[appendChild]($s[getRangeAt](i)[cloneContents]());
                     }
-                    h = container[html].split(X).join("");
+                    h = join(container[innerHTML].split(X));
                     h = (is_x(x) || x) ? $.f(h) : h;
-                    return (is_x(p) || p) ? h : h[re](pattern(P_SPLIT_REGXP, 'g'), '\n\n')[re](pattern(P_ANY_REGXP, 'g'), "");
+                    return (is_x(p) || p) ? h : h[replace](pattern(P_SPLIT_REGXP, 'g'), '\n\n')[replace](pattern(P_ANY_REGXP, 'g'), "");
                 }
                 return "";
             }
             return $s_get() + "";
         }
 
-        function selection_e(t) {
-            $s = $s_get();
-            var a = $s && $s[focus + 'Node'] || nul, b;
-            if (!a) {
+        function selection_e(t, parent) {
+            var s = selection_v(1, 0),
+                a = fragment(s), b, c, i, j;
+            if (a && a[0][length]) {
+                $r = $r_get();
+                $r[deleteContents]();
+                $r[insertNode](a[1]);
+            }
+            a = a[0];
+            // get specific node by its node name;
+            // e.g. `selection_e('a')` to search for an `<a>` tag in the current selection
+            // or at the closest parent of the current selection
+            if (t) {
+                // current selection may contains the node that we want
+                for (i = 0, j = a[length]; i < j; ++i) {
+                    b = a[i];
+                    if (lc(b[nodeName]) === t) {
+                        return b; // yep, found one!
+                    }
+                }
+                // if node was not found in the current selection,
+                // check whether we are inside that node;
+                if (is_x(parent) || parent) {
+                    i = selection_s(); // first, save the current selection
+                    // insert a placeholder text to the `$.view`
+                    c = selection_i(X + s); // `c` is now a node
+                    c = c && c[0] && c[0][parentNode]; // then, get the parent element of `c`
+                    if (
+                        // if it has parent and node name of `c` is equal to `t`…
+                        // e.g. `<$t>dd[ccc]dddd</$t>`…
+                        c && lc(c[nodeName]) === t
+                        // make sure node is not `$.view`
+                        && c !== view
+                    ) {
+                        // remove the placeholder text…
+                        c[innerHTML] = join(c[innerHTML].split(X));
+                        // restore the selection…
+                        // if has selection, focus to that selection! (restore previous selection)
+                        if (s && s !== c[innerHTML]) {
+                            selection_r(i);
+                        // else, focus to the parent node!
+                        } else {
+                            selection_m([c]);
+                        }
+                        // and return that parent!
+                        return c;
+                    }
+                }
                 return nul;
             }
-            if (is_text(a)) {
-                if (a[parent] !== view) {
-                    a = a[parent];
-                }
-            }
-            b = lc(a[node]);
-            if (t) {
-                return b === t ? a : nul;
-            }
-            return a;
+            return a[length] ? a : nul;
         }
 
         function selection_c(i) {
             if ($r = $r_get()) {
                 i = i === 1 ? fals : i === 0 ? tru : i;
-                $r[$r_collapse](i);
+                $r[collapse](i);
             }
-            return $;
+            return $r;
         }
 
         function selection_i(s, select) {
             if ($.is[focus]) {
-                var f, node, fn, ln;
+                var f = fragment(s);
                 if ($s = $s_get()) {
                     $r = $r_get();
-                    $r[$r_delete]();
-                    f = fragment(s);
-                    fn = f[0];
-                    ln = f[1];
-                    $r[$r_insert](f[2]);
-                    if (ln) {
-                        $r = $r[$r_clone]();
-                        $r[$r_start_1](ln);
-                        if (select === tru) {
-                            $r[$r_start_0](fn);
-                        } else {
-                            // reverse the direction
-                            if (select === 1) {
-                                select = 0;
-                                // TODO: keep the cursor visible after insert after
-                                selection_i(s, tru); // this is hacky :(
-                            } else if (select === 0) {
-                                select = 1;
-                            }
-                            selection_c(select);
-                        }
-                        $s[$s_reset]();
-                        $s[$s_set]($r);
+                    $r[deleteContents]();
+                    $r[insertNode](f[1]);
+                    // reverse the direction
+                    if (select === 0) {
+                        selection_c(1);
+                    } else if (select === 1) {
+                        selection_i(s, tru); // hacky but works :(
+                        selection_c(0);
                     }
+                    $s[removeAllRanges]();
+                    $s[addRange]($r);
                 }
-                return fn;
+                return f[0];
             }
             return nul;
         }
@@ -279,49 +321,45 @@
         function selection_a(o) {
             try {
                 var a = selection_e('a'),
-                    b = selection_v(1, 1, 0)[re](/<a(\s[^<>]*?)?>|<\/a>/g, ""), c;
+                    b = selection_v(1, 1, 0)[replace](/<a(\s[^<>]*?)?>|<\/a>/g, ""), c;
                 // check for internal link
-                o = o[re](/^\s*javascript:/i, "");
+                o = o[replace](/^\s*javascript:/i, "");
                 var i = o[0], j = win.location.hostname;
-                i = '/?&#'[pos](i) !== -1 || o[pos]('/') === -1;
-                if (j && (o[pos]('//' + j) === 0 || o[pos]('://' + j) !== -1)) {
+                i = '/?&#'[indexOf](i) !== -1 || o[indexOf]('/') === -1;
+                if (j && (o[indexOf]('//' + j) === 0 || o[indexOf]('://' + j) !== -1)) {
                     i = 1;
                 }
                 // no value
                 if (!o) {
-                    // selection is an `<a>`
+                    // selection is an `<a>`, unwrap!
                     if (a) {
-                        b = a[html];
+                        b = a[innerHTML];
                         // remove the `<a>`
-                        a[parent][remove](a);
+                        a[parentNode][removeChild](a);
                     }
-                    // insert the selection HTML
-                    selection_i(b, tru);
+                    // insert content of the `<a>`
+                    a = selection_i(b, tru)[0];
                 // has value set
                 } else {
                     // selection is not an `<a>`
                     if (!a) {
-                        // insert HTML to selection
-                        c = selection_i('<a href="' + o + '">' + b + '</a>', tru);
-                        // select content of `<a>`
-                        $r_get()[$r_select_content](c);
+                        // replace selection with an `<a>`
+                        a = selection_i('<a href="' + o + '">' + b + '</a>', tru)[0];
                     } else {
                         // just put to the `href` attribute of `<a>`
-                        a[set]('href', o);
+                        a[setAttribute]('href', o);
                     }
-                    if (a = selection_e('a')) {
-                        // automatic `rel="nofollow"` and `target="_blank"` attribute
-                        // to the `<a>` with external link URL
-                        if (i) {
-                            a[reset]('rel');
-                            a[reset]('target');
-                        } else {
-                            a[set]('rel', 'nofollow');
-                            a[set]('target', 'blank');
-                        }
+                    // automatic `rel="nofollow"` and `target="_blank"` attribute
+                    // to the `<a>` with external link URL
+                    if (i) {
+                        a[removeAttribute]('rel');
+                        a[removeAttribute]('target');
+                    } else {
+                        a[setAttribute]('rel', 'nofollow');
+                        a[setAttribute]('target', 'blank');
                     }
                 }
-                return selection_e('a');
+                return a; // return tne `<a>`
             } catch (e) {}
             return nul;
         }
@@ -329,90 +367,121 @@
         function selection_s() {
             var $r, $rr, $s;
             if ($r = $r_get()) {
-                $rr = $r[$r_clone]();
-                $rr[$r_select_content](view);
-                $rr[$r_end]($r.startContainer, $r.startOffset);
-                $s = ($rr + "")[len];
-                return [$s, $s + ($r + "")[len]];
+                $rr = $r[cloneRange]();
+                $rr[selectNodeContents](view);
+                $rr[setEnd]($r.startContainer, $r.startOffset);
+                $s = ($rr + "")[length];
+                return [$s, $s + ($r + "")[length]];
             }
             return nul;
         }
 
         function selection_r(s) {
             if (!s) return;
-            var $r = doc[$r_](), $s,
+            var $r = doc[createRange](), $s,
                 ci = 0, cin,
                 n = [view],
                 i, j, f, x;
-            $r[$r_start](view, 0);
-            $r[$r_collapse](tru);
+            $r[setStart](view, 0);
+            $r[collapse](tru);
             while (!x && (j = n.pop())) {
                 if (is_text(j)) {
-                    cin = ci + j[len];
+                    cin = ci + j[length];
                     if (!f && s[0] >= ci && s[0] <= cin) {
-                        $r[$r_start](j, s[0] - ci);
+                        $r[setStart](j, s[0] - ci);
                         f = 1;
                     }
                     if (f && s[1] >= ci && s[1] <= cin) {
-                        $r[$r_end](j, s[1] - ci);
+                        $r[setEnd](j, s[1] - ci);
                         x = 1;
                     }
                     ci = cin;
                 } else {
-                    i = j[childn][len];
+                    i = j[childNodes][length];
                     while (i--) {
-                        n.push(j[childn][i]);
+                        n.push(j[childNodes][i]);
                     }
                 }
             }
-            $s = win[$s_]();
-            $s[$s_reset]();
-            $s[$s_set]($r);
+            $s = win[getSelection]();
+            $s[removeAllRanges]();
+            $s[addRange]($r);
+        }
+
+        function selection_n() {
+            return fragment(selection_v(1, 1, 0))[0];
+        }
+
+        function selection_m(n, c) {
+            c = is_x(c) || !c;
+            var fn = n[0],
+                ln = n[n[length] - 1];
+            $s = $s_get();
+            $r = $r_get();
+            if (n[length] === 1) {
+                $r[c ? selectNodeContents : selectNode](fn);
+            } else {
+                $r[c ? setStartAfter : setStartBefore](fn);
+                $r[c ? setEndBefore : setEndAfter](ln);
+            }
+            $s[removeAllRanges]();
+            $s[addRange]($r);
+            return n;
         }
 
         function selection_w(t, i, p) {
             if ($.is[focus]) {
                 if (is_x(i)) i = -1;
-                var current = pattern('<' + t + '(?:\\s[^<>]*?)?>|<\\/' + t + '>', 'g'),
+                var regxp = '<' + t + '(?:\\s[^<>]*?)?>|<\\/' + t + '>', // hacky :(
                     a = selection_e(t),
-                    b = selection_v(1, 1, 0)[re](current, ""),
-                    c = nul, d;
-                if (a !== view) {
-                    if (i === 0 || (i === -1 && a)) {
-                        if (a && (d = a[html])) {
-                            a[parent][remove](a);
-                            if (b && d[pos](b) !== -1 && b[len] < d[len]) {
-                                // `<$t>a[b]c</$t>` → `<$t>a</$t>b<$t>c</$t>`
-                                selection_i('<' + t + '>' + d[chop](0, d[pos](b)) + '</' + t + '>', 0);
-                                c = selection_i(b, 0);
-                                selection_i('<' + t + '>' + d[chop](d[pos](b) + b[len]) + '</' + t + '>', 1);
-                            } else {
-                                // `<$t>[abc]</$t>` → `abc`
-                                c = selection_i(b || d, tru);
-                            }
+                    b = selection_v(1, 1, 0),
+                    c = [], d, e;
+                // first, prepare to split the tag between paragraph;
+                // e.g. `a<br><br>b` → `a</$t><br><br><$t>b`
+                b = b[replace](pattern('(\\n|' + BR_ANY_REGXP + '){2,}', 'gi'), '</' + t + '>' + BR + BR + '<' + t + '>');
+                // if force unwrap or has wrapped by the `<$t>`
+                if (i === 0 || (i === -1 && a)) {
+                    if (a) {
+                        // get the HTML content of `a`
+                        d = a[innerHTML];
+                        // remove the parent element from `$.view`
+                        a[parentNode][removeChild](a);
+                        var bb = b[replace](pattern(regxp, 'g'), "");
+                        if (
+                            // if `d` string contains `bb` string…
+                            // e.g. `dd[bbb]dddd`…
+                            d[indexOf](bb) !== -1
+                            // and `b` string length is less than `d` string length…
+                            && b[length] < d[length]
+                            // it means that we are selecting the `d` string, but not the whole `d` string;
+                        ) {
+                            // then do make the split version of the previous `<$t>abc</$t>` container…
+                            // e.g. `<$t>a[b]c</$t>` → `<$t>a</$t>b<$t>c</$t>`
+                            // hacky :(
+                            e = d[substring](0, d[indexOf](bb)); // make sure `e` is not empty
+                            e && selection_i('<' + t + '>' + e + '</' + t + '>', 0);
+                            e = d[substring](d[indexOf](bb) + bb[length]); // @ditto
+                            e && selection_i('<' + t + '>' + e + '</' + t + '>', 1);
+                            c = selection_i(bb, tru);
+                        } else {
+                            // hacky :(
+                            b = b[replace](pattern('^' + regxp + '$', 'g'), "");
+                            // else, unwrap!
+                            c = selection_i(b, tru);
                         }
-                    } else if (i === 1 || (i === -1 && !a)) {
-                        // `a<br><br>b` → `<$t>a</$t><br><br><$t>b</$t>`
-                        b = b[re](pattern('(\\n|' + BR_ANY_REGXP + '){2,}', 'g'), '</' + t + '>' + BR + BR + '<' + t + '>');
-                        // `a` → `<$t>a</$t>`
-                        c = selection_i('<' + t + '>' + b + '</' + t + '>', tru);
                     }
-                    if (c) {
-                        $r = $r_get();
-                        $r && $r[$r_select_content](c);
-                        if (!b && p) {
-                            selection_i(p, tru);
-                        }
-                    }
+                // if force wrap or hasn’t wrapped by the `<$t>`
+                } else if (i === 1 || (i === -1 && !a)) {
+                    c = selection_i('<' + t + '>' + (b || p || "") + '</' + t + '>', tru);
                 }
-                return c;
+                return c[0] || nul; // return the first node if any
             }
             return nul;
         }
 
         function focus_to(x, i) {
             if (focus in x) {
-                x.selectionStart = x.selectionEnd = is_x(i) ? x[val][len] : i;
+                x.selectionStart = x.selectionEnd = is_x(i) ? x[value][length] : i;
                 x[focus]();
             }
         }
@@ -423,9 +492,9 @@
             return is_x(i) ? o : o[i];
         };
         $.d = function(p, v, f) {
-            var d = dialog[child][0];
+            var d = dialog[children][0];
             d[placeholder] = p;
-            d[val] = v;
+            d[value] = v;
             delay(function() {
                 focus_to(d);
             }, 1);
@@ -433,12 +502,12 @@
             return $.d.v(1), $;
         };
         $.d.x = function(r, x) {
-            var i = dialog[child][0],
-                v = i[val];
+            var i = dialog[children][0],
+                v = i[value];
             if (v && !x) { // has value set, don’t hide!
                 cls_s(container, error);
-                $.is[error] = tru;
-                $.is.d = tru;
+                $_is[error] = tru;
+                $_is.d = tru;
                 delay(function() {
                     $.is[focus] = fals;
                     $.is[blur] = tru;
@@ -447,7 +516,7 @@
             } else {
                 cls_r(container, 'd');
                 cls_r(container, error);
-                $.is.d = fals;
+                $_is.d = fals;
             }
             // force focus state
             $.is[focus] = tru;
@@ -459,12 +528,12 @@
             cls_s(container, 'd');
             cls_r(container, error);
             $.is[error] = fals;
-            $.is.d = tru;
+            $_is.d = tru;
             $.$[1] = s ? selection_s() : nul;
             return $;
         };
 
-        win[NS][instance][target.id || target.name || Object.keys(win[NS][instance])[len]] = $;
+        win[NS][instance][target.id || target.name || Object.keys(win[NS][instance])[length]] = $;
 
         o = o || {};
         for (i in config) {
@@ -476,24 +545,25 @@
             source: fals,
             d: fals,
             e: function(s) {
-                if (typeof s === "string") {
-                    return selection_e(s) ? tru : fals;
-                }
-                return selection_e() === s;
+                $.$[1] = selection_s();
+                var e = selection_e(s);
+                selection_r($.$[1]);
+                return e ? tru : fals; // TODO: don’t screw the current selection
             },
             focus: fals,
             blur: tru,
             error: fals
         };
 
-        var c_enter = config.enter,
+        var $_is = $.is,
+            c_enter = config.enter,
             c_x = config.x,
             c_update = config.update,
-            cln = config.classes[0],
-            text = config.text || {},
-            tags = config.tags.join('|'),
-            attributes = config.attributes.join('|'),
-            blocks = 'a(rticle|side)|blockquote|(fig)?caption|figure|h([1-6]|eader)|div|li|[ou]l|p(re)?|section|t(able|[dh])',
+            c_class = config.classes[0],
+            c_text = config.text || {},
+            c_tags = join(config.tags, '|'),
+            c_attributes = join(config.attributes, '|'),
+            c_blocks = join(config.blocks, '|'),
             _t = 0,
             tools = {
                 b: function() {
@@ -506,26 +576,26 @@
                     selection_w('u');
                 },
                 a: function(e) {
-                    var a = selection_v(1, 1, 0), b, c;
+                    var a = selection_v(1, 1, 0)[replace](/\s|<[^<>]+?>/g, ""), b, c;
                     // toggle auto-link on URL-like text
                     if (/^[a-z\d]+:\/\/\S+$/[test](a)) {
                         if (selection_e('a')) {
-                            selection_w('a', 0); // force unwrap
+                            selection_w('a', 0); // force unwrap!
                         } else {
                             selection_a(a);
                         }
                     } else {
-                        if ($.is.d) {
+                        if ($_is.d) {
                             $.d.x(1); // cancel
                         } else {
                             if (b = selection_e('a')) {
-                                c = b[get]('href');
+                                c = b[getAttribute]('href');
                             }
-                            $.d('http://', (c ? c[re](/\/+$/, "") : 'http://' + lc(a[re](/\s|<[^<>]+?>/g, ""))) || "", function(e, $, i) {
-                                selection_a(i[val]);
+                            $.d('http://', (c ? c[replace](/\/+$/, "") : 'http://' + lc(a)) || "", function(e, $, i) {
+                                selection_a(i[value]);
                             });
                             delay(function() {
-                                c && dialog[child][0][select](); // select all value if selection already wrapped by the `<a>`
+                                c && dialog[children][0][select](); // select all value if selection already wrapped by the `<a>`
                             }, 2);
                         }
                     }
@@ -533,7 +603,7 @@
                 x: function(e) {
                     if (!c_x) return;
                     var h = view.offsetHeight;
-                    h && (target[style][minh] = h + 'px');
+                    h && (target[style][minHeight] = h + 'px');
                     if (!_t) {
                         $.$[1] = selection_s();
                         cls_s(container, 'source');
@@ -549,81 +619,83 @@
                         $.$[1] && selection_r($.$[1]);
                         _t = 0;
                     }
-                    $.is.view = !_t;
-                    $.is.source = !!_t;
+                    $_is.view = !_t;
+                    $_is.source = !!_t;
                     $.d.x(0, 1);
                     is_fn(c_x) && c_x(e, $, _t || 0);
                 }
             };
 
         function cls_s(e, s) {
-            var c = e[cla];
+            var c = e[className];
             if (pattern('(^|\\s)\\s*' + s + '\\s*(\\s|$)')[test](c)) {
                 return e;
             }
-            return (e[cla] = c + ' ' + s), e;
+            return (e[className] = c + ' ' + s), e;
         }
 
         function cls_r(e, s) {
-            var t = e[cla][re](pattern('(^|\\s)\\s*' + s + '\\s*(\\s|$)', 'g'), '$1$2');
-            return (t ? (e[cla] = t[re](/^\s*|\s*$/g, "")) : e[reset]('class')), e;
+            var t = e[className][replace](pattern('(^|\\s)\\s*' + s + '\\s*(\\s|$)', 'g'), '$1$2');
+            return (t ? (e[className] = t[replace](/^\s*|\s*$/g, "")) : e[removeAttribute]('class')), e;
         }
 
         function btn(t, c, s, f) {
             var a = cls_s(el('a'), c),
                 b = s[1] || s[0];
-            if (b[pos]('svg:') === 0) {
+            // shortcut for SVG icon by prefixing the icon value with `svg:`
+            // `<svg width="16" height="16" viewBox="0 0 16 16"><path d="$b"></path></svg>`
+            if (b[indexOf]('svg:') === 0) {
                 b = svg_pref + b.slice(4) + svg_suf;
             }
-            a[html] = '<span>' + b + '</span>';
+            a[innerHTML] = '<span>' + b + '</span>';
             a.title = t;
             a.href = 'javascript:;';
             if (f) {
                 function R(e) {
-                    f.apply(this, [e, $, a]), copy(), view[focus](), (is_fn(c_update) && c_update(e, $, view)), e[stop]();
+                    f.apply(this, [e, $, a]), copy(), view[focus](), (is_fn(c_update) && c_update(e, $, view)), e[preventDefault]();
                 }
                 ev_s(a, "touchstart", R);
                 ev_s(a, "mousedown", R);
             }
             return [a, f];
         }
-        $.t = function(id, text, fn, i) {
-            var a = btn(text[0] + (text[2] ? ' (' + text[2] + ')' : ""), cln + '-t:' + id, text, fn);
+        $.t = function(id, c_text, fn, i) {
+            var a = btn(c_text[0] + (c_text[2] ? ' (' + c_text[2] + ')' : ""), c_class + '-t:' + id, c_text, fn);
             if (is_x(i)) {
                 i = nul;
             } else {
                 if (i < 0) {
-                    i = tool[child][len] + i;
+                    i = tool[children][length] + i;
                 }
             }
-            tool[insert](a[0], tool[child][i] || nul);
+            tool[insertBefore](a[0], tool[children][i] || nul);
             return a[0];
         };
         for (i in tools) {
             $.t[i] = tools[i];
-            tools[i] = btn(text[i][0] + (text[i][2] ? ' (' + text[i][2] + ')' : ""), cln + '-t:' + i, text[i], tools[i]);
+            tools[i] = btn(c_text[i][0] + (c_text[i][2] ? ' (' + c_text[i][2] + ')' : ""), c_class + '-t:' + i, c_text[i], tools[i]);
             $.t[i].e = tools[i][0];
         }
         $.f = function(text) {
-            text = text[re](/\r/g, "").split(X).join("");
+            text = join(text[replace](/\r/g, "").split(X));
             // remove empty HTML tag(s)
-            text = text[re](/<([\w-:]+?)(?:\s[^<>]*?)?>\s*<\/([\w-:]+?)>/g, function($, a, b) {
+            text = text[replace](/<([\w-:]+?)(?:\s[^<>]*?)?>\s*<\/([\w-:]+?)>/g, function($, a, b) {
                 return a === b ? "" : $;
             });
-            text = text[re](/<code(?:\s[^<>]*?)?>([\s\S]*?)<\/code>/g, function(a, b) {
-                return '<code>' + b[re](/(\t| {4})/g, '&nbsp;&nbsp;&nbsp;&nbsp;') + '</code>';
+            text = text[replace](/<code(?:\s[^<>]*?)?>([\s\S]*?)<\/code>/g, function(a, b) {
+                return '<code>' + b[replace](/(\t| {4})/g, '&nbsp;&nbsp;&nbsp;&nbsp;') + '</code>';
             });
             // convert XHTML tag(s) into HTML5 tag(s)
-            text = text[re](/<(\/?)([\w-:]+?)(\s[^<>]*?)?>/g, function($, a, b, c) {
+            text = text[replace](/<(\/?)([\w-:]+?)(\s[^<>]*?)?>/g, function($, a, b, c) {
                 b = lc(b);
                 // filter HTML tag(s)
-                if (!pattern('^(' + tags + '|' + blocks + ')$')[test](b)) {
+                if (!pattern('^(' + c_tags + '|' + c_blocks + ')$')[test](b)) {
                     return "";
                 }
                 if (c = c || "") {
                     // filter HTML attribute(s)
-                    c = c[re](/\s+([\w-:]+?)(?:="((?:\\.|[^"])*?)"|$)/g, function($, a, b) {
-                        if (!pattern('^(' + attributes + ')$')[test](a)) {
+                    c = c[replace](/\s+([\w-:]+?)(?:="((?:\\.|[^"])*?)"|$)/g, function($, a, b) {
+                        if (!pattern('^(' + c_attributes + ')$')[test](a)) {
                             return "";
                         }
                         return $;
@@ -632,42 +704,42 @@
                 var heading = /^(h[1-6]|th)$/[test](b),
                     cap = /^((fig)?caption)$/[test](b),
                     d = a ? "" : c;
-                if (pattern('^(' + tags + ')$')[test](b)) {
-                    return '<' + a + b + d + '>';
-                } else if (b === 'b' || b === 'strong' || heading) {
+                if (b === 'b' || b === 'strong' || heading) {
                     return '<' + a + 'strong' + d + '>' + (heading && a ? BR + BR : "");
                 } else if (b === 'i' || b === 'em' || cap) {
                     return '<' + a + 'em' + d + '>';
-                } else if (pattern('^(' + blocks + ')$')[test](b)) {
+                } else if (pattern('^(' + c_tags + ')$')[test](b)) {
+                    return '<' + a + b + d + '>';
+                } else if (pattern('^(' + c_blocks + ')$')[test](b)) {
                     return BR + BR;
                 }
                 return "";
             });
             // convert line break to `<p>` and `<br>`
-            text = text[re](pattern(P_SPLIT_REGXP, 'gi'), '</p><p$1>')[re](pattern(BR_ANY_REGXP, 'gi'), BR)[re](/\n/g, BR)[re](pattern('(?:' + BR_ANY_REGXP + '){3,}', 'gi'), BR + BR)[re](pattern('^(?:' + BR_ANY_REGXP + ')+|(?:' + BR_ANY_REGXP + ')+$', 'gi'), "")[re](pattern('(?:' + BR_ANY_REGXP + '){2,}', 'gi'), '</p><p>')[re](pattern(P_EMPTY_REGXP, 'gi'), "");
+            text = text[replace](pattern(P_SPLIT_REGXP, 'gi'), '</p><p$1>')[replace](pattern(BR_ANY_REGXP, 'gi'), BR)[replace](/\n/g, BR)[replace](pattern('(?:' + BR_ANY_REGXP + '){3,}', 'gi'), BR + BR)[replace](pattern('^(?:' + BR_ANY_REGXP + ')+|(?:' + BR_ANY_REGXP + ')+$', 'gi'), "")[replace](pattern('(?:' + BR_ANY_REGXP + '){2,}', 'gi'), '</p><p>')[replace](pattern(P_EMPTY_REGXP, 'gi'), "");
             text = text && !pattern('^' + P_CONTAIN_REGXP + '$', 'gi')[test](text) ? '<p>' + text + '</p>' : text;
             return text;
         };
         function write() {
-            view[html] = $.f(target[val])[re](pattern(P_SPLIT_REGXP, 'gi'), BR + BR)[re](pattern(P_ANY_REGXP, 'gi'), "");
+            view[innerHTML] = $.f(target[value])[replace](pattern(P_SPLIT_REGXP, 'gi'), BR + BR)[replace](pattern(P_ANY_REGXP, 'gi'), "");
         } write();
         function copy() {
-            var v = $.f(view[html]);
+            var v = $.f(view[innerHTML]);
             if (config.tidy) {
-                v = v[re](pattern(P_SPLIT_REGXP, 'gi'), '</p>\n\n<p$1>')[re](pattern(BR_REGXP, 'gi'), BR + '\n');
+                v = v[replace](pattern(P_SPLIT_REGXP, 'gi'), '</p>\n\n<p$1>')[replace](pattern(BR_REGXP, 'gi'), BR + '\n');
             }
-            target[val] = v;
+            target[value] = v;
         } copy();
-        cls_s(container, cln + ' view');
-        target[set](spellcheck, fals);
-        cls_s(tool, cln + '-tool');
-        cls_s(view, cln + '-view');
+        cls_s(container, c_class + ' view');
+        target[setAttribute](spellCheck, fals);
+        cls_s(tool, c_class + '-tool');
+        cls_s(view, c_class + '-view');
         if (c_enter) {
             cls_s(container, 'expand');
         }
-        view[set](editable, tru);
-        view[set](spellcheck, fals);
-        view[set](placeholder, target[placeholder] || "");
+        view[setAttribute](contentEditable, tru);
+        view[setAttribute](spellCheck, fals);
+        view[setAttribute](placeholder, target[placeholder] || "");
         ev_s(view, focus, function() {
             $.is[focus] = tru;
             $.is[blur] = fals;
@@ -682,29 +754,29 @@
         ev_s(view, paste, function() {
             delay(function() {
                 write();
-                var v = view[html];
-                view[html] = "", selection_i(v, 0);
+                var v = view[innerHTML];
+                view[innerHTML] = "", selection_i(v, 0);
             }, 1);
         });
         function kk(e) {
-            return lc(e.key || String.fromCharCode(e[KEYC]));
+            return lc(e.key || String.fromCharCode(e[keyCode]));
         }
         ev_s(view, keydown, function(e) {
-            var ctrl = e[CTRL],
-                shift = e[SHIFT],
-                k = e[KEYC],
+            var ctrl = e[ctrlKey],
+                shift = e[shiftKey],
+                k = e[keyCode],
                 p = container,
                 key = kk(e), form;
             if (ctrl && !shift && (key === 'b' || k === 66)) {
-                tools.b[1](), e[stop]();
+                tools.b[1](), e[preventDefault]();
             } else if (ctrl && !shift && (key === 'i' || k === 73)) {
-                tools.i[1](), e[stop]();
+                tools.i[1](), e[preventDefault]();
             } else if (ctrl && !shift && (key === 'u' || k === 85)) {
-                tools.u[1](), e[stop]();
+                tools.u[1](), e[preventDefault]();
             } else if (ctrl && !shift && (key === 'l' || k === 76)) {
-                tools.a[1](), e[stop]();
+                tools.a[1](), e[preventDefault]();
             } else if (ctrl && shift && (key === 'x' || k === 88) && c_x) {
-                tools.x[1](), e[stop]();
+                tools.x[1](), e[preventDefault]();
             } else if (!shift && (key === 'enter' || k === 13)) {
                 // Press `enter` to insert a line break
                 // Fix IE that will automatically inserts `<p>` instead of `<br>`
@@ -713,39 +785,39 @@
                     $r = $r_get();
                     selection_i(BR, 0);
                     selection_i(X, 1);
-                    e[stop]();
+                    e[preventDefault]();
                 }
                 // submit form on `enter` key in the `span[contenteditable]`
                 if (!c_enter) {
-                    while (p = p[parent]) {
-                        if (lc(p[node]) === 'form') {
+                    while (p = p[parentNode]) {
+                        if (lc(p[nodeName]) === 'form') {
                             form = p;
                             break;
                         }
                     }
-                    form && (form.submit(), e[stop]());
+                    form && (form.submit(), e[preventDefault]());
                 } else if (is_fn(c_enter)) {
                     c_enter(e, $, view);
                 }
             }
             is_fn(c_update) && c_update(e, $, view);
             delay(function() {
-                var v = view[html][re](pattern(X, 'g'), "");
+                var v = view[innerHTML][replace](pattern(X, 'g'), "");
                 if (!v || v === BR) {
-                    view[html] = "";
+                    view[innerHTML] = "";
                 }
                 copy();
             }, 1);
         });
-        var target_parent = target[parent],
+        var target_parent = target[parentNode],
             target_a = el('a');
         function fn_target_keydown(e) {
-            var ctrl = e[CTRL],
-                shift = e[SHIFT],
-                k = e[KEYC],
+            var ctrl = e[ctrlKey],
+                shift = e[shiftKey],
+                k = e[keyCode],
                 key = kk(e);
             if (ctrl && shift && (key === 'x' || k === 88) && c_x) {
-                tools.x[1](), e[stop]();
+                tools.x[1](), e[preventDefault]();
             } else if (!shift && (key === 'enter' || k === 13)) {
                 is_fn(c_enter) && c_enter(e, $, target);
             }
@@ -753,10 +825,10 @@
             delay(write, 1);
         }
         function editor_create() {
-            if (container[parent]) {
+            if (container[parentNode]) {
                 return $; // did create already, skip!
             }
-            cls_s(target, cln + '-source');
+            cls_s(target, c_class + '-source');
             ev_s(target, keydown, fn_target_keydown);
             t = config.tools;
             for (i in t) {
@@ -765,60 +837,60 @@
                     if (i === 'x' && !c_x) {
                         continue; // disable the source view if `config.x = false`
                     }
-                    tool[append](tools[i][0]);
+                    tool[appendChild](tools[i][0]);
                 }
             }
-            container[append](view);
-            if (target_parent && lc(target_parent[node]) === 'p') {
-                target_parent[insert](target_a, target);
-                target_parent[parent][insert](target, target_parent);
-                target_parent[parent][remove](target_parent);
+            container[appendChild](view);
+            if (target_parent && lc(target_parent[nodeName]) === 'p') {
+                target_parent[insertBefore](target_a, target);
+                target_parent[parentNode][insertBefore](target, target_parent);
+                target_parent[parentNode][removeChild](target_parent);
             }
-            target[parent][insert](container, target);
-            container[append](target);
-            container[append](tool);
-            cls_s(dialog, cln + '-d');
-            dialog[html] = '<input type="text">';
+            target[parentNode][insertBefore](container, target);
+            container[appendChild](target);
+            container[appendChild](tool);
+            cls_s(dialog, c_class + '-d');
+            dialog[innerHTML] = '<input type="text">';
             $.d.x();
-            var dc = dialog[child][0];
-            dc[set](spellcheck, fals);
+            var dc = dialog[children][0];
+            dc[setAttribute](spellCheck, fals);
             ev_s(dc, click, function() {
                 $.is[error] = fals;
                 cls_r(container, error);
             });
             ev_s(dc, keydown, function(e) {
                 var t = this,
-                    ctrl = e[CTRL],
-                    shift = e[SHIFT],
-                    k = e[KEYC],
+                    ctrl = e[ctrlKey],
+                    shift = e[shiftKey],
+                    k = e[keyCode],
                     key = kk(e);
                 if (!ctrl && !shift && (key === 'enter' || k === 13)) {
                     $.d.x(1, 1);
-                    dialog_fn && dialog_fn(e, $, t), (dialog_fn = 0, t[val] = ""), (is_fn(c_update) && c_update(e, $, view)), e[stop]();
-                } else if (!shift && ((key === 'escape' || k === 27) || (!t[val][len] && (key === 'backspace' || k === 8)))) {
+                    dialog_fn && dialog_fn(e, $, t), (dialog_fn = 0, t[value] = ""), (is_fn(c_update) && c_update(e, $, view)), e[preventDefault]();
+                } else if (!shift && ((key === 'escape' || k === 27) || (!t[value][length] && (key === 'backspace' || k === 8)))) {
                     $.d.x(1, 1);
-                    dialog_fn = 0, e[stop]();
+                    dialog_fn = 0, e[preventDefault]();
                 }
             });
-            container[append](dialog);
+            container[appendChild](dialog);
             return $;
         } editor_create();
         function editor_destroy() {
-            if (!container[parent]) {
+            if (!container[parentNode]) {
                 return $; // did destroy already, skip!
             }
             if (target_parent) {
-                container[parent][insert](target_parent, container);
-                target_parent[insert](target, target_a);
-                target_parent[remove](target_a);
+                container[parentNode][insertBefore](target_parent, container);
+                target_parent[insertBefore](target, target_a);
+                target_parent[removeChild](target_a);
             }
-            target[style][minh] = "";
-            if (!target[get](style)) {
-                target[reset](style);
+            target[style][minHeight] = "";
+            if (!target[getAttribute](style)) {
+                target[removeAttribute](style);
             }
-            cls_r(target, cln + '-source');
+            cls_r(target, c_class + '-source');
             ev_r(target, keydown, fn_target_keydown);
-            container[parent][remove](container);
+            container[parentNode][removeChild](container);
             return $;
         }
         $.container = container;
@@ -830,6 +902,8 @@
         $.c = selection_c;
         $.e = selection_e;
         $.i = selection_i;
+        $.m = selection_m;
+        $.n = selection_n;
         $.r = selection_r;
         $.s = selection_s;
         $.v = selection_v;
@@ -840,36 +914,36 @@
         $.destroy = editor_destroy;
         // focus
         $[focus] = function(i) {
-            if ($.is.view) {
-                var v = view[html];
+            if ($_is.view) {
+                var v = view[innerHTML];
                 view[focus]();
                 $.$[1] && selection_r($.$[1]);
                 $.is[focus] = tru;
                 $.is[blur] = fals;
                 // focus start
                 if (i === 0) {
-                    view[html] = "";
+                    view[innerHTML] = "";
                     selection_i(v, 1);
                 // focus end
                 } else if (i === 1) {
-                    view[html] = "";
+                    view[innerHTML] = "";
                     selection_i(v, 0);
                 // select all
                 } else if (i === tru) {
-                    $r = doc[$r_]();
-                    $r[$r_select_content](view);
+                    $r = doc[createRange]();
+                    $r[selectNodeContents](view);
                     $s = $s_get();
-                    $s[$s_reset]();
-                    $s[$s_set]($r);
+                    $s[removeAllRanges]();
+                    $s[addRange]($r);
                 }
-            } else if ($.is.source) {
+            } else if ($_is.source) {
                 target[focus]();
                 // focus start
                 if (i === 0) {
                     focus_to(target, 0);
                 // focus end
                 } else if (i === 1) {
-                    focus_to(target, target[val][len]);
+                    focus_to(target, target[value][length]);
                 // select all
                 } else if (i === tru) {
                     target[select]();
@@ -879,11 +953,11 @@
         };
         // blur
         $[blur] = function() {
-            if ($.is.view) {
+            if ($_is.view) {
                 $.is[focus] = fals;
                 $.is[blur] = tru;
                 view[blur]();
-            } else if ($.is.source) {
+            } else if ($_is.source) {
                 target[blur]();
             }
             return $;
@@ -891,24 +965,24 @@
         // set value
         $.set = function(v, i) {
             v = $.f(v);
-            if ($.is.view || i === 1) {
-                v = v[re](pattern(P_EDGE_REGXP, 'gi'), "")[re](pattern(P_SPLIT_REGXP, 'gi'), BR + BR);
+            if ($_is.view || i === 1) {
+                v = v[replace](pattern(P_EDGE_REGXP, 'gi'), "")[replace](pattern(P_SPLIT_REGXP, 'gi'), BR + BR);
             }
             if (is_x(i)) {
-                if ($.is.view) {
-                    view[html] = v;
+                if ($_is.view) {
+                    view[innerHTML] = v;
                     copy();
-                } else if ($.is.source) {
-                    target[val] = v;
+                } else if ($_is.source) {
+                    target[value] = v;
                     write();
-                } else if ($.is.d) {
-                    dialog[child][0][val] = v;
+                } else if ($_is.d) {
+                    dialog[children][0][value] = v;
                 }
             } else if (i === 0) {
-                target[val] = v;
+                target[value] = v;
                 write();
             } else if (i === 1) {
-                view[html] = v;
+                view[innerHTML] = v;
                 copy();
             }
             return $;
@@ -917,28 +991,28 @@
         $.get = function(s, i) {
             if (is_x(i)) {
                 var v;
-                if ($.is.source) {
-                    v = target[val];
-                } else if ($.is.d) {
-                    v = dialog[child][0][val];
-                } else /* if ($.is.view) */ {
-                    v = target[val]; // default
+                if ($_is.source) {
+                    v = target[value];
+                } else if ($_is.d) {
+                    v = dialog[children][0][value];
+                } else /* if ($_is.view) */ {
+                    v = target[value]; // default
                 }
                 return v ? v : s;
             } else if (i === 0) {
-                return target[val] || s;
+                return target[value] || s;
             } else if (i === 1) {
-                return view[html] || s;
+                return view[innerHTML] || s;
             }
         };
         $.disable = function() {
-            view[reset](editable);
-            target[set](readonly, tru);
+            view[removeAttribute](contentEditable);
+            target[setAttribute](readOnly, tru);
             return $;
         };
         $.enable = function() {
-            view[set](editable, tru);
-            target[reset](readonly);
+            view[setAttribute](contentEditable, tru);
+            target[removeAttribute](readOnly);
             return $s;
         };
         return $;

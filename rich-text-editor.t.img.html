@@ -45,18 +45,18 @@
     });
 
     editor.t('img', ['Insert Image', 'svg:M5.656 9l-2.313 3h9.313l-3-4-2.313 3zM14 12.656c0 0.719-0.625 1.344-1.344 1.344h-9.313c-0.719 0-1.344-0.625-1.344-1.344v-9.313c0-0.719 0.625-1.344 1.344-1.344h9.313c0.719 0 1.344 0.625 1.344 1.344v9.313z'], function() {
-        var img = editor.$$(1).cloneContents(),
-            src = "";
-        img = img.firstChild;
-        if (img && img.nodeName.toLowerCase() === 'img') {
-            src = img.getAttribute('src') || "";
-        }
+        var img = editor.e('img'),
+            src = img && img.getAttribute('src') || "";
         if (editor.is.d) {
             editor.d.x(true); // cancel
         } else {
             editor.d('favicon.ico', src, function(e, $, input) {
                 if (input.value) {
-                    editor.i('<br><br><img alt="" src="' + input.value + '"><br><br>', 0);
+                    if (img) {
+                        img.src = input.value;
+                    } else {
+                        editor.i('<br><br><img alt="" src="' + input.value + '"><br><br>', 0);
+                    }
                 }
             });
         }

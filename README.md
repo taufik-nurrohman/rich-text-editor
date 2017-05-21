@@ -187,7 +187,7 @@ editor.i('<img arc="file.png">', 1); // put caret before the inserted HTML (inse
 ### Get Selected HTML Node
 
 ~~~ .js
-editor.e();
+editor.e(); // return list of nodes in the current selection
 editor.e('a'); // check if the selected text is an `<a>` tag
 ~~~
 
@@ -195,6 +195,21 @@ editor.e('a'); // check if the selected text is an `<a>` tag
 
 ~~~ .js
 editor.f('foo bar <b>baz</b> <span>qux</span>');
+~~~
+
+### Get Selection as Node
+
+~~~ .js
+console.log(editor.n());
+~~~
+
+### Create Selection Range
+
+Create selection range from _A_ node to _B_ node.
+
+~~~ .js
+var p = editor.view.querySelectorAll('p');
+editor.m([p[0], p.pop()]);
 ~~~
 
 ### Tool
