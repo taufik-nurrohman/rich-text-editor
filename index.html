@@ -6,7 +6,7 @@
     <title>Rich Text Editor</title>
     <link href="favicon.ico" rel="shortcut icon">
     <link href="rich-text-editor.css" rel="stylesheet">
-    <style>@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,400i,700i|Roboto+Mono:400,700,400i,700i);body,kbd{font-family:'Roboto Condensed',Helmet,FreeSans,Sans-Serif}.rich-text-editor-source,code{font-family:'Roboto Mono','Courier New',Courier,'Nimbus Mono L',Monospace;font-size:86%}body,html{padding:.5em;margin:0;font-size:18px;line-height:1.5;background:#ffa;color:#000}.rich-text-editor-tool{opacity:1;visibility:visible;background:#000}.rich-text-editor-tool a{color:#aaa}.rich-text-editor-tool a:focus,.rich-text-editor-tool a:hover{background:0 0;color:#ccc}.rich-text-editor-source{background-color:#000;color:#bbb;font-size:70%;line-height:1.25;text-shadow:0 1px 3px #000}a{color:#00a;text-decoration:none}.rich-text-editor{box-shadow:0 1px 3px rgba(0,0,0,.4)}</style>
+    <style>@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,400i,700i|Roboto+Mono:400,700,400i,700i);body,kbd{font-family:'Roboto Condensed',Helmet,FreeSans,Sans-Serif}.rich-text-editor-source,code{font-family:'Roboto Mono','Courier New',Courier,'Nimbus Mono L',Monospace;font-size:86%}body,html{padding:.5em;margin:0;font-size:18px;line-height:1.5;background:#ffa;color:#000}.rich-text-editor-tool{opacity:1;visibility:visible;background:#000}.rich-text-editor-tool a{color:#aaa}.rich-text-editor-tool a:focus,.rich-text-editor-tool a:hover{background:0 0;color:#ccc}.rich-text-editor-source{background-color:#000;color:#bbb;font-size:70%;line-height:1.25;text-shadow:0 1px 3px #000}a{color:#00a;text-decoration:none}.rich-text-editor{box-shadow:0 1px 3px rgba(0,0,0,.4)}.rich-text-editor-view{padding:2em}.rich-text-editor-view abbr{border:none;color:#a00}.rich-text-editor-view kbd{display:inline-block;vertical-align:middle;background:#eee;color:#444;text-shadow:0 1px 0 #fff;border-top:1px solid #f5f5f5;border-bottom:1px solid #ccc;padding:0 .35em;box-shadow:0 1px 3px rgba(0,0,0,.2)}</style>
   </head>
   <body>
     <form method="get">
@@ -51,6 +51,7 @@
     <script src="rich-text-editor.js"></script>
     <script>
     var editor = new RTE(document.querySelector('textarea'), {
+        tools: ['b', 'i', 'u', 'a', 'x'],
         enter: function() {
             console.log('enter');
         },
