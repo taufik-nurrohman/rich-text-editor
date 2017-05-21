@@ -7,11 +7,18 @@
     <link href="favicon.ico" rel="shortcut icon">
     <link href="rich-text-editor.css" rel="stylesheet">
     <style>
+    @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,400i,700i|Roboto+Mono:400,700,400i,700i');
+    body,kbd {font-family:'Roboto Condensed',Helmet,FreeSans,Sans-Serif}
+    code {
+      font-family:'Roboto Mono','Courier New',Courier,'Nimbus Mono L',Monospace;
+      font-size:86%;
+    }
     html,
     body {
       padding:.5em;
       margin:0;
-      font:normal normal 18px/1.5 Helmet,FreeSans,Sans-Serif;
+      font-size:18px;
+      line-height:1.5;
       background:#ffa;
       color:#000;
     }
@@ -23,7 +30,7 @@
   </head>
   <body>
     <form method="get">
-      <p><textarea name="content" placeholder="Content goes here&hellip;">&lt;p&gt;&lt;strong style=&quot;font-size:150%;&quot;&gt;Rich Text Editor&lt;/strong&gt;&lt;/p&gt;
+      <p><textarea name="content" placeholder="Content goes here&hellip;">&lt;p&gt;&lt;strong style=&quot;font-size:150%;color:#00f;&quot;&gt;Rich Text Editor&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;A rich text editor that is designed to accept &lt;em&gt;only&lt;/em&gt; limited set of inline &lt;abbr title=&quot;Hyper Text Markup Language&quot;&gt;HTML&lt;/abbr&gt; tags.&lt;br&gt;Works best to be used on any editors that are accessible in the public such as comment form in a blog or &lt;abbr title=&quot;Question/Answer&quot;&gt;Q/A&lt;/abbr&gt; form in a forum.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Features&lt;/strong&gt;&lt;br&gt;&bull; Tools: &lt;em&gt;Bold&lt;/em&gt;, &lt;em&gt;Italic&lt;/em&gt;, &lt;em&gt;Underline&lt;/em&gt;, &lt;em&gt;Link&lt;/em&gt;, &lt;em&gt;Source&lt;/em&gt;&lt;br&gt;&bull; Keyboard Shortcut such as: &lt;kbd&gt;&#x2318;+B&lt;/kbd&gt; for Bold&lt;br&gt;&bull; HTML5 Output&lt;br&gt;&bull; Simple &lt;abbr title=&quot;Application Programming Interface&quot;&gt;API&lt;/abbr&gt;&lt;br&gt;&bull; Option to Disable the &lt;kbd&gt;Enter&lt;/kbd&gt; Key&lt;br&gt;&bull; &lt;abbr title=&quot;Cross-Site Scripting&quot;&gt;XSS&lt;/abbr&gt; Protection.&lt;/p&gt;</textarea></p>
       <p><button type="submit">Submit</button></p>
