@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  RICH TEXT EDITOR 1.1.0
+ *  RICH TEXT EDITOR 1.1.1
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -22,6 +22,7 @@
         style = 'style',
         minHeight = 'minHeight',
         innerHTML = 'innerHTML',
+        outerHTML = 'outerHTML',
         className = 'className',
         addEventListener = 'addEventListener',
         removeEventListener = 'removeEventListener',
@@ -76,6 +77,7 @@
         tru = true,
         fals = false,
         nul = null,
+        div = 'div',
         ctrlKey = 'ctrlKey',
         shiftKey = 'shiftKey',
         altKey = 'altKey',
@@ -115,6 +117,11 @@
         return x.join(s || "");
     }
 
+    function to_text(s, t) {
+        t = t || '[\\w-:]+';
+        return s[replace](pattern('<\\/' + t + '>|<' + t + '(\\s[^<>]*?)?>', 'gi'), "")[replace](/ +/g, ' ')[replace](/^\s*|\s*$/g, "");
+    }
+
     function ev_s(a, b, f) {
         return a[addEventListener](b, f, fals);
     }
@@ -124,31 +131,37 @@
     }
 
     function fragment(s) {
-        var a = el('div'),
+        var a = el(div),
             b = doc[create + 'DocumentFragment'](),
-            c = [], d;
+            c = [],
+            d = [], e, f = "";
         if (is_string(s)) {
             a[innerHTML] = s;
-            while (d = a[firstChild]) {
-                c.push(b[appendChild](d));
+            while (e = a[firstChild]) {
+                d.push(lc(e[nodeName] || ""));
+                c.push(b[appendChild](e));
             }
-            return [c, b]; // [node(s), container]
+            return [c, b, d, s]; // [node(s), container, name(s), string]
         }
         for (d in s) {
-            d = s[d];
-            if (is_string(d)) {
-                a[innerHTML] = d;
-                d = a[firstChild];
+            e = s[d];
+            if (is_string(e)) {
+                f += e;
+                a[innerHTML] = e;
+                e = a[firstChild];
+            } else {
+                f += e[outerHTML];
             }
-            b[appendChild](d);
+            c.push(lc(e[nodeName] || ""));
+            b[appendChild](e);
         }
-        return [s, b]; // [node(s), container]
+        return [s, b, c, f]; // [node(s), container, name(s), string]
     }
 
     (function($) {
 
         // plugin version
-        $.version = '1.1.0';
+        $.version = '1.1.1';
 
         // collect all instance(s)
         $[instance] = {};
@@ -192,10 +205,10 @@
                 x: 1,
                 update: 0
             },
-            container = el('div'),
-            tool = el('div'),
-            view = el('div'),
-            dialog = el('div'),
+            container = el(div),
+            tool = el(div),
+            view = el(div),
+            dialog = el(div),
             BR = '<br>',
             X = win[NS].x,
             BR_REGXP = '<br(\\s[^<>]*?)?\\s*\\/?>',
@@ -222,11 +235,11 @@
         function selection_v(h, x, p) {
             if (h) {
                 if ($s = $s_get()) {
-                    var container = el('div'), i, j;
+                    var c = el(div), i, j;
                     for (i = 0, j = $s[rangeCount]; i < j; ++i) {
-                        container[appendChild]($s[getRangeAt](i)[cloneContents]());
+                        c[appendChild]($s[getRangeAt](i)[cloneContents]());
                     }
-                    h = join(container[innerHTML].split(X));
+                    h = join(c[innerHTML].split(X));
                     h = (is_x(x) || x) ? $.f(h) : h;
                     return (is_x(p) || p) ? h : h[replace](pattern(P_SPLIT_REGXP, 'g'), '\n\n')[replace](pattern(P_ANY_REGXP, 'g'), "");
                 }
@@ -236,7 +249,7 @@
         }
 
         function selection_e(t, parent) {
-            var s = selection_v(1, 0),
+            var s = selection_v(1, 0, 0),
                 a = fragment(s), b, c, i, j;
             if (a && a[0][length]) {
                 $r = $r_get();
@@ -321,12 +334,14 @@
         function selection_a(o) {
             try {
                 var a = selection_e('a'),
-                    b = selection_v(1, 1, 0)[replace](/<a(\s[^<>]*?)?>|<\/a>/g, ""), c;
-                // check for internal link
-                o = o[replace](/^\s*javascript:/i, "");
-                var i = o[0], j = win.location.hostname;
-                i = '/?&#'[indexOf](i) !== -1 || o[indexOf]('/') === -1;
-                if (j && (o[indexOf]('//' + j) === 0 || o[indexOf]('://' + j) !== -1)) {
+                    b = to_text(selection_v(1, 1, 0), 'a'), c;
+                // sanitize input
+                o = to_text(o[replace](/^\s*javascript:/i, ""));
+                var i = o[0],
+                    j = win.location.hostname;
+                // detect internal link…
+                i = '/?&#'[indexOf](i) !== -1 || o[indexOf]('/') === -1; // check for relative path
+                if (j && (o[indexOf]('//' + j) === 0 || o[indexOf]('://' + j) !== -1)) { // full path prefixed by URL protocol or `//`
                     i = 1;
                 }
                 // no value
@@ -432,13 +447,9 @@
         function selection_w(t, i, p) {
             if ($.is[focus]) {
                 if (is_x(i)) i = -1;
-                var regxp = '<' + t + '(?:\\s[^<>]*?)?>|<\\/' + t + '>', // hacky :(
-                    a = selection_e(t),
-                    b = selection_v(1, 1, 0),
-                    c = [], d, e;
-                // first, prepare to split the tag between paragraph;
-                // e.g. `a<br><br>b` → `a</$t><br><br><$t>b`
-                b = b[replace](pattern('(\\n|' + BR_ANY_REGXP + '){2,}', 'gi'), '</' + t + '>' + BR + BR + '<' + t + '>');
+                var a = selection_e(t),
+                    b = selection_v(1, 0, 0),
+                    c = [], d, e, j, k;
                 // if force unwrap or has wrapped by the `<$t>`
                 if (i === 0 || (i === -1 && a)) {
                     if (a) {
@@ -446,14 +457,16 @@
                         d = a[innerHTML];
                         // remove the parent element from `$.view`
                         a[parentNode][removeChild](a);
-                        var bb = b[replace](pattern(regxp, 'g'), "");
+                        // compare plain text version of text selection and node content
+                        var bb = to_text(b),
+                            dd = to_text(d);
                         if (
-                            // if `d` string contains `bb` string…
+                            // if `dd` string contains `bb` string…
                             // e.g. `dd[bbb]dddd`…
-                            d[indexOf](bb) !== -1
-                            // and `b` string length is less than `d` string length…
-                            && b[length] < d[length]
-                            // it means that we are selecting the `d` string, but not the whole `d` string;
+                            dd[indexOf](bb) !== -1
+                            // and `bb` string length is less than `dd` string length…
+                            && bb[length] < dd[length]
+                            // it means that we are selecting the `dd` string, but not the whole `dd` string;
                         ) {
                             // then do make the split version of the previous `<$t>abc</$t>` container…
                             // e.g. `<$t>a[b]c</$t>` → `<$t>a</$t>b<$t>c</$t>`
@@ -464,14 +477,28 @@
                             e && selection_i('<' + t + '>' + e + '</' + t + '>', 1);
                             c = selection_i(bb, tru);
                         } else {
-                            // hacky :(
-                            b = b[replace](pattern('^' + regxp + '$', 'g'), "");
                             // else, unwrap!
-                            c = selection_i(b, tru);
+                            c = fragment(b);
+                            d = el(div);
+                            if (c && c[2] && (k = c[2][length])) {
+                                for (j = 0; j < k; ++j) {
+                                    if (c[2][j] === t) {
+                                        // `<$t>abc</$t>` → `abc`
+                                        d[innerHTML] += c[0][j][innerHTML];
+                                    } else {
+                                        d[appendChild](c[0][j]);
+                                    }
+                                }
+                            }
+                            c = selection_i(d[innerHTML], tru);
                         }
                     }
                 // if force wrap or hasn’t wrapped by the `<$t>`
                 } else if (i === 1 || (i === -1 && !a)) {
+                    // first, prepare to split the tag between paragraph;
+                    // e.g. `a<br><br>b` → `a</$t><br><br><$t>b`
+                    b = b && b[replace](pattern('(\\n|' + BR_ANY_REGXP + '){2,}', 'gi'), '</' + t + '>' + BR + BR + '<' + t + '>');
+                    // wrap!
                     c = selection_i('<' + t + '>' + (b || p || "") + '</' + t + '>', tru);
                 }
                 return c[0] || nul; // return the first node if any
@@ -576,7 +603,7 @@
                     selection_w('u');
                 },
                 a: function(e) {
-                    var a = selection_v(1, 1, 0)[replace](/\s|<[^<>]+?>/g, ""), b, c;
+                    var a = to_text(selection_v(1, 1, 0))[replace](/\s+/g, '%20'), b, c;
                     // toggle auto-link on URL-like text
                     if (/^[a-z\d]+:\/\/\S+$/[test](a)) {
                         if (selection_e('a')) {
@@ -609,14 +636,14 @@
                         cls_s(container, 'source');
                         cls_r(container, 'view');
                         target[focus]();
-                        $.$[0] && selection_r($.$[0]);
+                        selection_r($.$[0]);
                         _t = 1;
                     } else {
                         $.$[0] = selection_s();
                         cls_s(container, 'view');
                         cls_r(container, 'source');
                         view[focus]();
-                        $.$[1] && selection_r($.$[1]);
+                        selection_r($.$[1]);
                         _t = 0;
                     }
                     $_is.view = !_t;
@@ -631,12 +658,12 @@
             if (pattern('(^|\\s)\\s*' + s + '\\s*(\\s|$)')[test](c)) {
                 return e;
             }
-            return (e[className] = c + ' ' + s), e;
+            return (e[className] = to_text(c + ' ' + s)), e;
         }
 
         function cls_r(e, s) {
-            var t = e[className][replace](pattern('(^|\\s)\\s*' + s + '\\s*(\\s|$)', 'g'), '$1$2');
-            return (t ? (e[className] = t[replace](/^\s*|\s*$/g, "")) : e[removeAttribute]('class')), e;
+            var t = to_text(e[className][replace](pattern('(^|\\s)\\s*' + s + '\\s*(\\s|$)', 'g'), '$1$2'));
+            return (t ? (e[className] = t) : e[removeAttribute]('class')), e;
         }
 
         function btn(t, c, s, f) {
@@ -682,8 +709,8 @@
             text = text[replace](/<([\w-:]+?)(?:\s[^<>]*?)?>\s*<\/([\w-:]+?)>/g, function($, a, b) {
                 return a === b ? "" : $;
             });
-            text = text[replace](/<code(?:\s[^<>]*?)?>([\s\S]*?)<\/code>/g, function(a, b) {
-                return '<code>' + b[replace](/(\t| {4})/g, '&nbsp;&nbsp;&nbsp;&nbsp;') + '</code>';
+            text = text[replace](/<code(\s[^<>]*?)?>([\s\S]*?)<\/code>/g, function($, a, b) {
+                return '<code' + (a || "") + '>' + b[replace](/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')[replace](/ /g, '&nbsp;') + '</code>';
             });
             // convert XHTML tag(s) into HTML5 tag(s)
             text = text[replace](/<(\/?)([\w-:]+?)(\s[^<>]*?)?>/g, function($, a, b, c) {
@@ -718,7 +745,9 @@
             // convert line break to `<p>` and `<br>`
             text = text[replace](pattern(P_SPLIT_REGXP, 'gi'), '</p><p$1>')[replace](pattern(BR_ANY_REGXP, 'gi'), BR)[replace](/\n/g, BR)[replace](pattern('(?:' + BR_ANY_REGXP + '){3,}', 'gi'), BR + BR)[replace](pattern('^(?:' + BR_ANY_REGXP + ')+|(?:' + BR_ANY_REGXP + ')+$', 'gi'), "")[replace](pattern('(?:' + BR_ANY_REGXP + '){2,}', 'gi'), '</p><p>')[replace](pattern(P_EMPTY_REGXP, 'gi'), "");
             text = text && !pattern('^' + P_CONTAIN_REGXP + '$', 'gi')[test](text) ? '<p>' + text + '</p>' : text;
-            return text;
+            // validate HTML markup natively using the browser behaviour
+            text = fragment(text);
+            return text[3] || "";
         };
         function write() {
             view[innerHTML] = $.f(target[value])[replace](pattern(P_SPLIT_REGXP, 'gi'), BR + BR)[replace](pattern(P_ANY_REGXP, 'gi'), "");
@@ -822,7 +851,9 @@
                 is_fn(c_enter) && c_enter(e, $, target);
             }
             is_fn(c_update) && c_update(e, $, target);
-            delay(write, 1);
+            delay(function() {
+                write(), selection_r($.$[1]);
+            }, 1);
         }
         function editor_create() {
             if (container[parentNode]) {

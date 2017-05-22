@@ -1,9 +1,9 @@
 Rich Text Editor
 ================
 
-> Simple rich text editor.
+> A rich text editor that is designed to accept limited set of inline HTML tags only.
 
-A rich text editor that is designed to accept only limited set of inline HTML tags. Works best to be used on any editors that are accessible in the public such as comment form in a blog or Q/A form in a forum.
+This rich text editor works best on any form that are accessible in the public such as comment form in a blog, chat form in a social media and question or answer form in a forum.
 
 ![Rich Text Editor](https://cloud.githubusercontent.com/assets/1669261/26141683/48b2ec6a-3b07-11e7-9173-5a1f002c5441.gif)
 

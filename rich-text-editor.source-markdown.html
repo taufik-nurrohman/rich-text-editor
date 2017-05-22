@@ -26,7 +26,9 @@
                 });
             }
             content = _('strong', '**', content);
+            content = _('b', '**', content);
             content = _('em', '_', content);
+            content = _('i', '_', content);
             content = _('code', '`', content);
             content = _('del', '~~', content); // GFM
             content = content.replace(/<a(\s[^<>]*?)?>([\s\S]*?)<\/a>/g, function($, a, b) {
@@ -45,7 +47,7 @@
         $.Markdown_HTML = function(content) {
             function _(s, t, content) {
                 s = s.replace(/./g, '\\$&');
-                return content.replace(new RegExp(s + '((?:\\\\.|[^' + s[1] + '\\n\\\\])*?)' + s, 'g'), function($, a) {
+                return content.replace(new RegExp(s + '((?:\\\\.|[^' + s[1] + '\\n])*?)' + s, 'g'), function($, a) {
                     return '<' + t + '>' + a.replace(/\\([*_`~])/g, '$1') + '</' + t + '>';
                 });
             }
