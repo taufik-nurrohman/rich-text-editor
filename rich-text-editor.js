@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  RICH TEXT EDITOR 1.1.1
+ *  RICH TEXT EDITOR 1.1.2
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -161,7 +161,7 @@
     (function($) {
 
         // plugin version
-        $.version = '1.1.1';
+        $.version = '1.1.2';
 
         // collect all instance(s)
         $[instance] = {};
@@ -468,13 +468,15 @@
                             && bb[length] < dd[length]
                             // it means that we are selecting the `dd` string, but not the whole `dd` string;
                         ) {
-                            // then do make the split version of the previous `<$t>abc</$t>` container…
+                            // copy attribute(s)…
+                            a = pattern('<' + t + '(\\s[^<>]*?)?>', 'i').exec(a[outerHTML]);
+                            a = a && a[1] || "";
+                            // then, do make the split version of the previous `<$t>abc</$t>` container…
                             // e.g. `<$t>a[b]c</$t>` → `<$t>a</$t>b<$t>c</$t>`
-                            // hacky :(
                             e = d[substring](0, d[indexOf](bb)); // make sure `e` is not empty
-                            e && selection_i('<' + t + '>' + e + '</' + t + '>', 0);
+                            e && selection_i('<' + t + a + '>' + e + '</' + t + '>', 0);
                             e = d[substring](d[indexOf](bb) + bb[length]); // @ditto
-                            e && selection_i('<' + t + '>' + e + '</' + t + '>', 1);
+                            e && selection_i('<' + t + a + '>' + e + '</' + t + '>', 1);
                             c = selection_i(bb, tru);
                         } else {
                             // else, unwrap!
