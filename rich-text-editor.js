@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  RICH TEXT EDITOR 1.1.2
+ *  RICH TEXT EDITOR 1.1.3
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -168,7 +168,7 @@
     (function($) {
 
         // plugin version
-        $.version = '1.1.2';
+        $.version = '1.1.3';
 
         // collect all instance(s)
         $[instance] = {};
@@ -239,7 +239,7 @@
                 // get current focus node
                 var s = $s_get()[focus + 'Node'];
                 // no focus node, skip!
-                if (!s) return fals;
+                if (!s) return nul;
                 // if focus node is a text node…
                 // e.g. `a|bc`
                 if (is_nude(s)) {
@@ -250,22 +250,25 @@
                     // check whether we are selecting a node
                     // e.g. `|<$t>abc</$t>|`
                     // then compare the node name of that node with `t`
-                    return lc(selection_v(1, 1, 0))[indexOf]('</' + t + '>') !== -1;
-                }
-                // if parent node name is equal to `t`…
-                // e.g. `<$t>a|bc</$t>`
-                if (s[nodeName] && lc(s[nodeName]) === t) {
-                    return tru; // return `true`
-                }
-                // check if we have parent node that is not `$.view`
-                // then compare the node name of that parent with `t`
-                while (s !== view) {
-                    if (s[nodeName] && lc(s[nodeName]) === t) {
-                        return tru;
+                    if ((s = selection_v(1, 1, 0)) && lc(s)[indexOf]('</' + t + '>') !== -1) {
+                        return selection_i(s, tru)[0]; // return the node
                     }
-                    s = s[parentNode];
+                } else {
+                    // if parent node name is equal to `t`…
+                    // e.g. `<$t>a|bc</$t>`
+                    if (s[nodeName] && lc(s[nodeName]) === t) {
+                        return s; // @ditto
+                    }
+                    // check if we have parent node that is not `$.view`
+                    // then compare the node name of that parent with `t`
+                    while (s && s !== view) {
+                        if (s[nodeName] && lc(s[nodeName]) === t) {
+                            return s; // @ditto
+                        }
+                        s = s[parentNode];
+                    }
                 }
-                return fals; // default is `false`
+                return nul; // default is `null`
             },
             focus: fals,
             blur: tru,
