@@ -96,8 +96,8 @@
   font:inherit;
   font-family:'Courier New',Courier,'Nimbus Mono L',Monospace;
   padding:.25em .5em;
-  resize:vertical;
   overflow:auto;
+  resize:none;
   display:none;
 }
 .rich-text-editor.source .rich-text-editor-view {display:none}

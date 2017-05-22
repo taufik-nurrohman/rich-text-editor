@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="rich-text-editor.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <h1>Plain Text</h1>
+    <p><textarea></textarea></p>
+    <h1><a href="http://fontawesome.io" rel="nofollow" target="_blank">Font Awesome</a></h1>
+    <p><textarea></textarea></p>
+    <script src="rich-text-editor.min.js"></script>
+    <script>
+    var textareas = document.querySelectorAll('textarea'),
+        editor_0 = new RTE(textareas[0], {
+            text: {
+                b: ['Bold', '<strong>B</strong>', 'Ctrl+B'],
+                i: ['Italic', '<em>I</em>', 'Ctrl+I'],
+                u: ['Underline', '<u>U</u>', 'Ctrl+U'],
+                a: ['Link', 'A', 'Ctrl+L'],
+                x: ['Source', '&#x22ef;', 'Ctrl+Shift+X']
+            }
+        }),
+        editor_1 = new RTE(textareas[1], {
+            text: {
+                b: ['Bold', '<i class="fa fa-bold"></i>', 'Ctrl+B'],
+                i: ['Italic', '<i class="fa fa-italic"></i>', 'Ctrl+I'],
+                u: ['Underline', '<i class="fa fa-underline"></i>', 'Ctrl+U'],
+                a: ['Link', '<i class="fa fa-link"></i>', 'Ctrl+L'],
+                x: ['Source', '<i class="fa fa-ellipsis-h"></i>', 'Ctrl+Shift+X']
+            }
+        });
+    </script>
+  </body>
+</html>
