@@ -46,7 +46,7 @@ Variable | Description
 config = {
     classes: ['rich-text-editor'],
     tools: ['b', 'i', 'u', 'a', 'x'], // visible tool(s)
-    tags: [ // allowed inline HTML tag(s)
+    tags: [ // allowed HTML tag(s)
         'a',
         'abbr',
         'b',
@@ -65,7 +65,7 @@ config = {
         'u',
         'var'
     ],
-    attributes: [
+    attributes: [ // allowed HTML attribute(s)
         'class',
         'data-[\\w-]+?',
         'href',
@@ -84,7 +84,7 @@ config = {
     },
     tidy: true, // tidy HTML output?
     enter: true, // set to `false` to automatically submit the closest form on enter key press
-    x: function(e, $, node) {}, // on change editor mode (view/source); set to `false` to disable the source view
+    x: function(e, $, node) {}, // on mode change (view/source); set to `false` to disable the source view
     update: function(e, $, node) {} // on view/source update
 };
 ~~~

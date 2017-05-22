@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <link href="rich-text-editor.css" rel="stylesheet">
+  </head>
+  <body>
+    <p>Press <kbd>&#x2318;+&#x21e7;+O</kbd> to show an alert message.</p>
+    <p><textarea>Lorem ipsum dolor sit amet.</textarea></p>
+    <script src="rich-text-editor.js"></script>
+    <script>
+
+    var editor = new RTE(document.querySelector('textarea'), {
+        update: function(e, $, node) {
+            if (node !== $.view) return; // exit if we are not typing in the editor view
+            var ctrl = e.ctrlKey,
+                shift = e.shiftKey,
+                code = e.keyCode,
+                key = (e.key || String.fromCharCode(code)).toLowerCase();
+            if (
+                ctrl &&
+                shift &&
+                (
+                    key === 'o' || // native `KeyboardEvent.key`
+                    code === 79    // deprecated `KeyboardEvent.keyCode`
+                )
+            ) {
+                e.preventDefault(); // cancel the default behaviour
+                alert('Hi!'); // test message!
+            }
+        }
+    });
+
+    </script>
+  </body>
+</html>
