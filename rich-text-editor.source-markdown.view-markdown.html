@@ -84,7 +84,7 @@
             content = _('`', 'code', content);
             content = _('~~', 'del', content); // GFM
             content = content.replace(/\[(.*?)\]\(([^\s]*?)(\s.*?)?\)/g, function($, a, b, c) {
-                if (c) {console.log(c)
+                if (c) {
                     c = c.replace(/^\s+"((?:\\"|[^"])*?)"/, ' title="$1"');
                 }
                 return '<a href="' + b + '"' + (c || "") + '>' + a + '</a>';

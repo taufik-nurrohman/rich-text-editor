@@ -7,34 +7,33 @@
     <link href="rich-text-editor.min.css" rel="stylesheet">
   </head>
   <body>
-    <h1>Convert HTML Source to Markdown</h1>
-    <p><textarea>Lorem ipsum **dolor** sit amet.</textarea></p>
+    <h1>Convert HTML Source to BBCode</h1>
+    <p><textarea>Lorem ipsum [b]dolor[/b] sit amet.</textarea></p>
     <p><button onclick="console.log(editor.get());">Get Value</button></p>
     <script src="rich-text-editor.min.js"></script>
     <script>
 
-    // RMTE: Rich Markdown Text Editor
-    var RMTE = function(target, config) {
+    // RBBCTE: Rich Markdown Text Editor
+    var RBBCTE = function(target, config) {
 
         var $ = new RTE(target, config);
 
-        // HTML to Markdown
-        $.HTML_Markdown = function(content) {
+        // HTML to BBCode
+        $.HTML_BBCode = function(content) {
             function _(s, t, content) {
                 return content.replace(new RegExp('<' + s + '(?:\\s[^<>]*?)?>([\\s\\S]*?)<\\/' + s + '>', 'g'), function($, a) {
-                    return t + a.replace(/([*_`~])/g, '\\$1') + t;
+                    return '[' + t + ']' + a + '[/' + t + ']';
                 });
             }
-            content = _('strong', '**', content);
-            content = _('b', '**', content);
-            content = _('em', '_', content);
-            content = _('i', '_', content);
-            content = _('code', '`', content);
-            content = _('del', '~~', content); // GFM
+            content = _('strong', 'b', content);
+            content = _('b', 'b', content);
+            content = _('em', 'i', content);
+            content = _('i', 'i', content);
+            content = _('code', 'code', content);
+            content = _('del', 's', content);
             content = content.replace(/<a(\s[^<>]*?)?>([\s\S]*?)<\/a>/g, function($, a, b) {
-                var href = (a.match(/ href="((?:\\"|[^"])*?)"/i) || [])[1],
-                    title = (a.match(/ title="((?:\\"|[^"])*?)"/i) || [])[1] || "";
-                return '[' + b.replace(/\n/g, ' ') + '](' + href + (title ? ' "' + title + '"' : "") + ')';
+                var href = (a.match(/ href="((?:\\"|[^"])*?)"/i) || [])[1];
+                return '[url=' + href + ']' + b + '[/url]';
             });
             content = content.replace(/(?:<br(\s[^<>]*?)?\s*\/?>){2,}/g, '\n\n');
             content = content.replace(/<br(\s[^<>]*?)?\s*\/?>/g, '  \n'); // hard break
@@ -43,23 +42,19 @@
             return content;
         };
 
-        // Markdown to HTML
-        $.Markdown_HTML = function(content) {
+        // BBCode to HTML
+        $.BBCode_HTML = function(content) {
             function _(s, t, content) {
-                s = s.replace(/./g, '\\$&');
-                return content.replace(new RegExp(s + '((?:\\\\.|[^' + s[1] + '\\n])*?)' + s, 'g'), function($, a) {
-                    return '<' + t + '>' + a.replace(/\\([*_`~])/g, '$1') + '</' + t + '>';
+                return content.replace(new RegExp('\\[' + s + '\\]((?:\\\\.|[^' + s + '\\n])*?)\\[\\/' + s + '\\]', 'g'), function($, a) {
+                    return '<' + t + '>' + a + '</' + t + '>';
                 });
             }
-            content = _('**', 'strong', content);
-            content = _('_', 'em', content);
-            content = _('`', 'code', content);
-            content = _('~~', 'del', content); // GFM
-            content = content.replace(/\[(.*?)\]\(([^\s]*?)(\s.*?)?\)/g, function($, a, b, c) {
-                if (c) {
-                    c = c.replace(/^\s+"((?:\\"|[^"])*?)"/, ' title="$1"');
-                }
-                return '<a href="' + b + '"' + (c || "") + '>' + a + '</a>';
+            content = _('b', 'strong', content);
+            content = _('i', 'em', content);
+            content = _('code', 'code', content);
+            content = _('s', 'del', content);
+            content = content.replace(/\[url=(.*?)\]([^\s]*?)\[\/url\]/g, function($, a, b) {
+                return '<a href="' + b + '" rel="nofollow" target="_blank">' + a + '</a>';
             });
             content = content.replace(/<\/p>\s*<p(\s[^<>]*?)?>/g, '\n\n');
             content = content.replace(/<\/p>|<p(\s[^<>]*?)?>/g, "");
@@ -70,18 +65,18 @@
         };
 
         // Re-write the filter function
-        $.f = $.HTML_Markdown;
+        $.f = $.HTML_BBCode;
 
-        // Convert Markdown to HTML
-        $.view.innerHTML = $.Markdown_HTML($.get("", 0));
+        // Convert BBCode to HTML
+        $.view.innerHTML = $.BBCode_HTML($.get("", 0));
         $.source.addEventListener("blur", function() {
-            $.view.innerHTML = $.Markdown_HTML($.get("", 0));
+            $.view.innerHTML = $.BBCode_HTML($.get("", 0));
         }, false);
         $.view.addEventListener("paste", function() {
             setTimeout(function() {
                 var v = $.get("", 0);
                 $.set("");
-                $.i($.Markdown_HTML(v));
+                $.i($.BBCode_HTML(v));
             }, 1);
         }, false);
 
@@ -91,7 +86,7 @@
 
     </script>
     <script>
-    var editor = new RMTE(document.querySelector('textarea'), {
+    var editor = new RBBCTE(document.querySelector('textarea'), {
         tools: ['b', 'i', 'a', 'x']
     });
     </script>

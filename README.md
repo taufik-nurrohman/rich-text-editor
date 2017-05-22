@@ -110,12 +110,12 @@ editor.disable();
 
 ~~~ .js
 editor.$; // selection storage [source, view]
+editor.config; // editor configuration
 editor.container; // editor container
 editor.view; // editor view
 editor.source; // editor source
 editor.tool; // editor tool
 editor.dialog; // editor dialog
-editor.config; // editor configuration
 ~~~
 
 ### Set Value
@@ -210,6 +210,14 @@ Create selection range from _A_ node to _B_ node.
 ~~~ .js
 var p = editor.view.querySelectorAll('p');
 editor.m([p[0], p.pop()]);
+~~~
+
+### Tool State
+
+~~~ .js
+if (editor.is.e('strong')) {
+    // caret was selecting a `<strong>` tag or is placed in a `<strong>` tag
+}
 ~~~
 
 ### Tool

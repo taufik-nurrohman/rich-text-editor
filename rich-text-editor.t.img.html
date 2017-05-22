@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width">
     <title>Demo</title>
     <link href="rich-text-editor.min.css" rel="stylesheet">
+    <style>
+    .rich-text-editor-view img {
+      min-width:2em;
+      min-height:2em;
+    }
+    </style>
   </head>
   <body>
     <h1>Custom Tool: Image</h1>
@@ -56,6 +62,7 @@
                         img.src = input.value;
                     } else {
                         editor.i('<br><br><img alt="" src="' + input.value + '"><br><br>', 0);
+                        editor.i(RTE.x, 1);
                     }
                 }
             });
