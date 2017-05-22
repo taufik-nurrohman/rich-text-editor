@@ -189,9 +189,9 @@
             svg_suf = '"></path></svg>',
             config = {
                 classes: ['rich-text-editor'],
-                tags: ['a(?:bbr)?|br?|code|d(?:fn|el)|em|i(?:ns)?|kbd|mark|p|span|strong|u|var'],
-                blocks: ['a(?:rticle|side)|blockquote|(?:fig)?caption|figure|h(?:[1-6]|eader)|div|li|[ou]l|p(?:re)?|section|t(?:able|[dh])'],
-                attributes: ['class', 'data-[\\w-]+?', 'href', 'id', 'rel', 'style', 'target', 'title'],
+                tags: ['a|abbr|b|br|code|dfn|del|em|i|ins|kbd|mark|p|span|strong|u|var'],
+                blocks: ['article|aside|blockquote|figure|figcaption|figure|h[1-6]|header|div|li|[ou]l|p|pre|section|table|tr|th'],
+                attributes: ['class|data-[\\w-]+?|href|id|rel|style|target|title'],
                 tools: ['b', 'i', 'u', 'x'],
                 text: {
                     b: ['Bold', svg_pref + 'M9 10.344c0.563 0 1-0.438 1-1s-0.438-1-1-1h-2.344v2h2.344zM6.656 4.344v2h2c0.563 0 1-0.438 1-1s-0.438-1-1-1h-2zM10.406 7.188c0.875 0.406 1.438 1.281 1.438 2.281 0 1.406-1.063 2.531-2.469 2.531h-4.719v-9.344h4.188c1.5 0 2.656 1.188 2.656 2.688 0 0.688-0.438 1.406-1.094 1.844z' + svg_suf,  ctrl + '+B'],
