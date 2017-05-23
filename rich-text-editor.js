@@ -309,6 +309,7 @@
                         } else {
                             selection_a(a);
                         }
+                        copy();
                     } else {
                         if ($_is.d) {
                             $.d.x(1); // cancel
@@ -318,7 +319,7 @@
                             }
                             s = 'http://';
                             $.d(s, (c ? c[replace](/\/+$/, "") : s + lc(a)) || "", function(e, $, i) {
-                                selection_a(i[value]);
+                                selection_a(i[value]), copy();
                             });
                             delay(function() {
                                 c && dialog[children][0][select](); // select all value if selection already wrapped by the `<a>`
