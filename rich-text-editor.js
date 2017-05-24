@@ -257,13 +257,13 @@
                     // if parent node name is equal to `t`…
                     // e.g. `<$t>a|bc</$t>`
                     if (s[nodeName] && lc(s[nodeName]) === t) {
-                        return s; // @ditto
+                        return s; // --ditto
                     }
                     // check if we have parent node that is not `$.view`
                     // then compare the node name of that parent with `t`
                     while (s && s !== view) {
                         if (s[nodeName] && lc(s[nodeName]) === t) {
-                            return s; // @ditto
+                            return s; // --ditto
                         }
                         s = s[parentNode];
                     }
