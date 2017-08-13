@@ -76,6 +76,7 @@
   padding:1em;
   min-height:1.5em;
   overflow:auto;
+  cursor:text;
 }
 .rich-text-editor.expand .rich-text-editor-view {min-height:6em}
 .rich-text-editor:hover .rich-text-editor-tool,

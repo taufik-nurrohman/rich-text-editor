@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo</title>
+    <link href="rich-text-editor.css" rel="stylesheet">
+  </head>
+  <body>
+    <p>Test HTML5 <code>required</code> attribute:</p>
+    <form>
+      <p><textarea required></textarea></p>
+      <p><button type="submit">Submit</button></p>
+    </form>
+    <script src="rich-text-editor.js"></script>
+    <script>
+
+    var editor = new RTE(document.querySelector('textarea'), {
+        tools: ['b', 'i', 'u', 'a', 'x']
+    });
+
+    </script>
+  </body>
+</html>

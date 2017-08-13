@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  RICH TEXT EDITOR 1.1.3
+ *  RICH TEXT EDITOR 1.1.4
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -168,7 +168,7 @@
     (function($) {
 
         // plugin version
-        $.version = '1.1.3';
+        $.version = '1.1.4';
 
         // collect all instance(s)
         $[instance] = {};
@@ -637,11 +637,13 @@
                     }
                 // if force wrap or hasn’t wrapped by the `<$t>`
                 } else if (i === 1 || (i === -1 && !a)) {
-                    // first, prepare to split the tag between paragraph;
-                    // e.g. `a<br><br>b` → `a</$t><br><br><$t>b`
-                    b = b && b[replace](pattern('(\\n|' + BR_ANY_REGXP + '){2,}', 'gi'), '</' + t + '>' + BR + BR + '<' + t + '>');
-                    // wrap!
-                    c = selection_i('<' + t + '>' + (b || p || "") + '</' + t + '>', tru);
+                    if (!a) {
+                        // first, prepare to split the tag between paragraph;
+                        // e.g. `a<br><br>b` → `a</$t><br><br><$t>b`
+                        b = b && b[replace](pattern('(\\n|' + BR_ANY_REGXP + '){2,}', 'gi'), '</' + t + '>' + BR + BR + '<' + t + '>');
+                        // wrap!
+                        c = selection_i('<' + t + '>' + (b || p || "") + '</' + t + '>', tru);
+                    }
                 }
                 return c[0] || nul; // return the first node if any
             }
@@ -825,12 +827,22 @@
             $_is[focus] = tru;
             $_is[blur] = fals;
             cls_s(container, focus);
+            // Remove error state if target has `required` attribute
+            if ($_is[error] && target.required && target[value] !== "") {
+                $_is[error] = fals;
+                cls_r(container, error);
+            }
         });
         ev_s(view, blur, function() {
             $_is[focus] = fals;
             $_is[blur] = tru;
             copy();
             cls_r(container, focus);
+            // Add error state if target has `required` attribute
+            if (!$_is[error] && target.required && target[value] === "") {
+                $_is[error] = tru;
+                cls_s(container, error);
+            }
         });
         ev_s(view, paste, function() {
             delay(function() {
@@ -868,7 +880,7 @@
                     selection_i(X, 1);
                     e[preventDefault]();
                 }
-                // submit form on `enter` key in the `span[contenteditable]`
+                // submit form on `enter` key in the `div[contenteditable]`
                 if (!c_enter) {
                     while (p = p[parentNode]) {
                         if (lc(p[nodeName]) === 'form') {
