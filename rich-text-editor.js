@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  RICH TEXT EDITOR 1.1.4
+ *  RICH TEXT EDITOR 1.1.5
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -168,7 +168,7 @@
     (function($) {
 
         // plugin version
-        $.version = '1.1.4';
+        $.version = '1.1.5';
 
         // collect all instance(s)
         $[instance] = {};
@@ -915,9 +915,7 @@
                 is_func(c_enter) && c_enter(e, $, target);
             }
             is_func(c_update) && c_update(e, $, target);
-            delay(function() {
-                write(), selection_r($.$[1]);
-            }, 1);
+            delay(write, 1);
         }
         function editor_create() {
             if (container[parentNode]) {
