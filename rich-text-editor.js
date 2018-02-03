@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  RICH TEXT EDITOR 1.1.5
+ *  RICH TEXT EDITOR 1.1.6
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -168,7 +168,7 @@
     (function($) {
 
         // plugin version
-        $.version = '1.1.5';
+        $.version = '1.1.6';
 
         // collect all instance(s)
         $[instance] = {};
@@ -641,9 +641,9 @@
                         // first, prepare to split the tag between paragraph;
                         // e.g. `a<br><br>b` → `a</$t><br><br><$t>b`
                         b = b && b[replace](pattern('(\\n|' + BR_ANY_REGXP + '){2,}', 'gi'), '</' + t + '>' + BR + BR + '<' + t + '>');
-                        // wrap!
-                        c = selection_i('<' + t + '>' + (b || p || "") + '</' + t + '>', tru);
                     }
+                    // wrap!
+                    c = selection_i('<' + t + '>' + (b || p || "") + '</' + t + '>', tru);
                 }
                 return c[0] || nul; // return the first node if any
             }
@@ -897,7 +897,7 @@
             delay(function() {
                 var v = view[innerHTML][replace](pattern(X, 'g'), "");
                 if (!v || v === BR) {
-                    view[innerHTML] = "";
+                    // view[innerHTML] = "";
                 }
                 copy();
             }, 1);
@@ -915,7 +915,7 @@
                 is_func(c_enter) && c_enter(e, $, target);
             }
             is_func(c_update) && c_update(e, $, target);
-            delay(write, 1);
+            delay(write, 2);
         }
         function editor_create() {
             if (container[parentNode]) {
