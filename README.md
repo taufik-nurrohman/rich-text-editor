@@ -109,7 +109,7 @@ editor.disable();
 ### Properties
 
 ~~~ .js
-editor.$; // selection storage [source, view]
+editor.lot; // selection storage [source, view]
 editor.config; // editor configuration
 editor.container; // editor container
 editor.view; // editor view

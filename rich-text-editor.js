@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  RICH TEXT EDITOR 1.1.6
+ *  RICH TEXT EDITOR 1.2.0
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -18,6 +18,7 @@
 (function(win, doc, NS) {
 
     var instance = '__instance__',
+        lot = 'lot',
         create = 'create',
         style = 'style',
         minHeight = 'minHeight',
@@ -168,7 +169,7 @@
     (function($) {
 
         // plugin version
-        $.version = '1.1.6';
+        $.version = '1.2.0';
 
         // collect all instance(s)
         $[instance] = {};
@@ -332,18 +333,18 @@
                     var h = view.offsetHeight;
                     h && (target[style][minHeight] = h + 'px');
                     if (!c_t) {
-                        $.$[1] = selection_s();
+                        $[lot][1] = selection_s();
                         cls_s(container, 'source');
                         cls_r(container, 'view');
                         target[focus]();
-                        selection_r($.$[0]);
+                        selection_r($[lot][0]);
                         c_t = 1;
                     } else {
-                        $.$[0] = selection_s();
+                        $[lot][0] = selection_s();
                         cls_s(container, 'view');
                         cls_r(container, 'source');
                         view[focus]();
-                        selection_r($.$[1]);
+                        selection_r($[lot][1]);
                         c_t = 0;
                     }
                     $_is.view = !c_t;
@@ -657,11 +658,11 @@
             }
         }
 
-        $.$ = [nul, nul]; // [source, view]
         $.$$ = function(i, j) {
             var o = [$s_get(), $r_get(j)];
             return is_undef(i) ? o : o[i];
         };
+        $[lot] = [nul, nul]; // [source, view]
         $.d = function(p, v, f) {
             var d = dialog[children][0];
             d[placeholder] = p;
@@ -692,7 +693,7 @@
             // force focus state
             $_is[focus] = tru;
             $_is[blur] = fals;
-            r && ($[focus](), selection_r($.$[1]));
+            r && ($[focus](), selection_r($[lot][1]));
             return $;
         };
         $.d.v = function(s) {
@@ -700,7 +701,7 @@
             cls_r(container, error);
             $_is[error] = fals;
             $_is.d = tru;
-            $.$[1] = s ? selection_s() : nul;
+            $[lot][1] = s ? selection_s() : nul;
             return $;
         };
 
@@ -827,10 +828,16 @@
             $_is[focus] = tru;
             $_is[blur] = fals;
             cls_s(container, focus);
-            // Remove error state if target has `required` attribute
-            if ($_is[error] && target.required && target[value] !== "") {
-                $_is[error] = fals;
-                cls_r(container, error);
+            // Add/remove error state if target has `required` attribute
+            if (target.required) {
+                if (target[value] === "") {
+                    // Do not fire the error state on first focus!
+                    // $_is[error] = tru;
+                    // cls_s(container, error);
+                } else {
+                    $_is[error] = fals;
+                    cls_r(container, error);
+                }
             }
         });
         ev_s(view, blur, function() {
@@ -838,17 +845,23 @@
             $_is[blur] = tru;
             copy();
             cls_r(container, focus);
-            // Add error state if target has `required` attribute
-            if (!$_is[error] && target.required && target[value] === "") {
-                $_is[error] = tru;
-                cls_s(container, error);
+            // Add/remove error state if target has `required` attribute
+            if (target.required) {
+                if (target[value] === "") {
+                    $_is[error] = tru;
+                    cls_s(container, error);
+                } else {
+                    $_is[error] = fals;
+                    cls_r(container, error);
+                }
             }
         });
         ev_s(view, paste, function() {
             delay(function() {
-                write();
-                var v = view[innerHTML];
-                view[innerHTML] = "", selection_i(v, 0);
+                var v = selection_s();
+                copy(), write();
+                view[blur]();
+                selection_r(v);
             }, 1);
         });
         function kk(e) {
@@ -857,7 +870,7 @@
         ev_s(view, keydown, function(e) {
             var ctrl = e[ctrlKey],
                 shift = e[shiftKey],
-                k = e[keyCode],
+                k = e[keyCode], // deprecated `e.keyCode` value
                 p = container,
                 key = kk(e), form;
             if (ctrl && !shift && (key === 'b' || k === 66)) {
@@ -882,6 +895,7 @@
                 }
                 // submit form on `enter` key in the `div[contenteditable]`
                 if (!c_enter) {
+                    copy();
                     while (p = p[parentNode]) {
                         if (lc(p[nodeName]) === 'form') {
                             form = p;
@@ -897,10 +911,9 @@
             delay(function() {
                 var v = view[innerHTML][replace](pattern(X, 'g'), "");
                 if (!v || v === BR) {
-                    // view[innerHTML] = "";
+                    view[innerHTML] = "";
                 }
-                copy();
-            }, 1);
+            }, 0);
         });
         var target_parent = target[parentNode],
             target_a = el('a');
@@ -917,12 +930,18 @@
             is_func(c_update) && c_update(e, $, target);
             delay(write, 2);
         }
+        function fn_target_focus() {
+            if ($_is.view) {
+                view[focus]();
+            }
+        }
         function editor_create() {
             if (container[parentNode]) {
                 return $; // did create already, skip!
             }
             cls_s(target, c_class + '-source');
             ev_s(target, keydown, fn_target_keydown);
+            ev_s(target, focus, fn_target_focus);
             t = config.tools;
             for (i in t) {
                 i = t[i];
@@ -966,6 +985,7 @@
                 }
             });
             container[appendChild](dialog);
+            write(), copy();
             return $;
         } editor_create();
         function editor_destroy() {
@@ -983,7 +1003,9 @@
             }
             cls_r(target, c_class + '-source');
             ev_r(target, keydown, fn_target_keydown);
+            ev_r(target, focus, fn_target_focus);
             container[parentNode][removeChild](container);
+            write(), copy();
             return $;
         }
         $.config = config;
@@ -1011,7 +1033,7 @@
             if ($_is.view) {
                 var v = view[innerHTML];
                 view[focus]();
-                $.$[1] && selection_r($.$[1]);
+                $[lot][1] && selection_r($[lot][1]);
                 $_is[focus] = tru;
                 $_is[blur] = fals;
                 // focus start

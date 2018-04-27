@@ -32,8 +32,9 @@ Lorem &lt;strong&gt;ipsum &lt;em&gt;dolor&lt;/em&gt;&lt;/strong&gt; sit amet.</t
             x: update
         });
 
-    editor.view.onfocus = update;
+    editor.view.onblur = update;
     editor.view.onclick = update;
+    editor.view.onfocus = update;
 
     function update() {
         // remove all active class from the editor tool(s)
