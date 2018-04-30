@@ -525,7 +525,9 @@
                 $rr[selectNodeContents](view);
                 $rr[setEnd]($r.startContainer, $r.startOffset);
                 $s = ($rr + "")[length];
-                return [$s, $s + ($r + "")[length]];
+                $s = [$s, $s + ($r + "")[length]];
+                // hacky but works :(
+                return $s[1] - $s[0] === 1 ? [$s[0], $s[0]] : $s;
             }
             return nul;
         }
@@ -701,7 +703,7 @@
             cls_r(container, error);
             $_is[error] = fals;
             $_is.d = tru;
-            $[lot][1] = s ? selection_s() : nul;
+            s && ($[lot][1] = selection_s());
             return $;
         };
 
