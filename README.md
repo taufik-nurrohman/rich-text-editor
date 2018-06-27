@@ -157,7 +157,6 @@ editor.v(true, true, false); // as HTML and remove the wrapping `<p>` tag
 editor.w('strong'); // toggle wrap/unwrap `<strong>` tag
 editor.w('strong', 1); // force wrap `<strong>` tag
 editor.w('strong', 0); // force unwrap `<strong>` tag
-editor.w('strong', -1, 'text goes here…'); // insert `text goes here…` text if no text was selected
 ~~~
 
 Wrap selection with HTML element and add attributes on that element:
@@ -279,7 +278,7 @@ Check whether these elements are visible at the time:
 ~~~ .js
 editor.is.view; // the rich text editor view
 editor.is.source; // the HTML source view
-editor.is.d; // the dialog view
+editor.is.dialog; // the dialog view
 ~~~
 
 ~~~ .js

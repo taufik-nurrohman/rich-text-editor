@@ -122,7 +122,7 @@
 .rich-text-editor.source .rich-text-editor-view {display:none}
 
 /* dialog */
-.rich-text-editor-d {
+.rich-text-editor-dialog {
   background:inherit;
   border:inherit;
   border-width:0;
@@ -134,7 +134,7 @@
   padding:1em;
   display:none;
 }
-.rich-text-editor-d input {
+.rich-text-editor-dialog input {
   display:inline-block;
   vertical-align:middle;
   width:12em;
@@ -148,7 +148,7 @@
   margin:0;
   padding:0 0 .25em;
 }
-.rich-text-editor.d .rich-text-editor-d {display:block}
+.rich-text-editor.dialog .rich-text-editor-dialog {display:block}
 
 /* error state */
 .rich-text-editor.error {border-color:#f00}

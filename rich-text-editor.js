@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  RICH TEXT EDITOR 1.2.0
+ *  RICH TEXT EDITOR 1.2.1
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -55,7 +55,11 @@
         select = 'select',
         keydown = 'keydown',
         paste = 'paste',
+        view = 'view',
+        source = 'source',
+        dialog = 'dialog',
         error = 'error',
+        tool = 'tool',
         test = 'test',
         contentEditable = 'contenteditable',
         readOnly = 'readonly',
@@ -213,10 +217,11 @@
                 x: 1,
                 update: 0
             },
-            container = el(div),
-            tool = el(div),
-            view = el(div),
-            dialog = el(div),
+            $container = el(div),
+            $tool = el(div),
+            $view = el(div),
+            $source = target,
+            $dialog = el(div),
             BR = '<br>',
             X = win[NS].x,
             s = '(\\s[^<>]*?)?',
@@ -235,7 +240,7 @@
         $.is = {
             view: tru,
             source: fals,
-            d: fals,
+            dialog: fals,
             e: function(t) {
                 // get current focus node
                 var s = $s_get()[focus + 'Node'];
@@ -247,7 +252,7 @@
                     s = s[parentNode]; // get the parent node of it if any
                 }
                 // if parent node is `$.view`…
-                if (s === view) {
+                if (s === $view) {
                     // check whether we are selecting a node
                     // e.g. `|<$t>abc</$t>|`
                     // then compare the node name of that node with `t`
@@ -262,7 +267,7 @@
                     }
                     // check if we have parent node that is not `$.view`
                     // then compare the node name of that parent with `t`
-                    while (s && s !== view) {
+                    while (s && s !== $view) {
                         if (s[nodeName] && lc(s[nodeName]) === t) {
                             return s; // --ditto
                         }
@@ -312,7 +317,7 @@
                         }
                         copy();
                     } else {
-                        if ($_is.d) {
+                        if ($_is[dialog]) {
                             $.d.x(1); // cancel
                         } else {
                             if (b = selection_e('a')) {
@@ -323,32 +328,32 @@
                                 selection_a(i[value]), copy();
                             });
                             delay(function() {
-                                c && dialog[children][0][select](); // select all value if selection already wrapped by the `<a>`
+                                c && $dialog[children][0][select](); // select all value if selection already wrapped by the `<a>`
                             }, 2);
                         }
                     }
                 },
                 x: function(e) {
                     if (!c_x) return;
-                    var h = view.offsetHeight;
-                    h && (target[style][minHeight] = h + 'px');
+                    var h = $view.offsetHeight;
+                    h && ($source[style][minHeight] = h + 'px');
                     if (!c_t) {
                         $[lot][1] = selection_s();
-                        cls_s(container, 'source');
-                        cls_r(container, 'view');
-                        target[focus]();
+                        cls_s($container, source);
+                        cls_r($container, view);
+                        $source[focus]();
                         selection_r($[lot][0]);
                         c_t = 1;
                     } else {
                         $[lot][0] = selection_s();
-                        cls_s(container, 'view');
-                        cls_r(container, 'source');
-                        view[focus]();
+                        cls_s($container, view);
+                        cls_r($container, source);
+                        $view[focus]();
                         selection_r($[lot][1]);
                         c_t = 0;
                     }
-                    $_is.view = !c_t;
-                    $_is.source = !!c_t;
+                    $_is[view] = !c_t;
+                    $_is[source] = !!c_t;
                     $.d.x(0, 1);
                     is_func(c_x) && c_x(e, $, c_t || 0);
                 }
@@ -412,7 +417,7 @@
                         // e.g. `<$t>dd[ccc]dddd</$t>`…
                         c && lc(c[nodeName]) === t
                         // make sure node is not `$.view`
-                        && c !== view
+                        && c !== $view
                     ) {
                         // remove the placeholder text…
                         c[innerHTML] = join(c[innerHTML].split(X));
@@ -522,7 +527,7 @@
             var $r, $rr, $s;
             if ($r = $r_get()) {
                 $rr = $r[cloneRange]();
-                $rr[selectNodeContents](view);
+                $rr[selectNodeContents]($view);
                 $rr[setEnd]($r.startContainer, $r.startOffset);
                 $s = ($rr + "")[length];
                 $s = [$s, $s + ($r + "")[length]];
@@ -536,9 +541,9 @@
             if (!s) return;
             var $r = doc[createRange](), $s,
                 ci = 0, cin,
-                n = [view],
+                n = [$view],
                 i, j, f, x;
-            $r[setStart](view, 0);
+            $r[setStart]($view, 0);
             $r[collapse](tru);
             while (!x && (j = n.pop())) {
                 if (is_nude(j)) {
@@ -585,7 +590,7 @@
             return n;
         }
 
-        function selection_w(t, i, p) {
+        function selection_w(t, i) {
             if ($_is[focus]) {
                 if (is_undef(i)) i = -1;
                 var a = selection_e(t),
@@ -646,7 +651,7 @@
                         b = b && b[replace](pattern('(\\n|' + BR_ANY_REGXP + '){2,}', 'gi'), '</' + t + '>' + BR + BR + '<' + t + '>');
                     }
                     // wrap!
-                    c = selection_i('<' + t + '>' + (b || p || "") + '</' + t + '>', tru);
+                    c = selection_i('<' + t + '>' + (b || "") + '</' + t + '>', tru);
                 }
                 return c[0] || nul; // return the first node if any
             }
@@ -666,7 +671,7 @@
         };
         $[lot] = [nul, nul]; // [source, view]
         $.d = function(p, v, f) {
-            var d = dialog[children][0];
+            var d = $dialog[children][0];
             d[placeholder] = p;
             d[value] = v;
             delay(function() {
@@ -676,21 +681,21 @@
             return $.d.v(1), $;
         };
         $.d.x = function(r, x) {
-            var i = dialog[children][0],
+            var i = $dialog[children][0],
                 v = i[value];
             if (v && !x) { // has value set, don’t hide!
-                cls_s(container, error);
+                cls_s($container, error);
                 $_is[error] = tru;
-                $_is.d = tru;
+                $_is[dialog] = tru;
                 delay(function() {
                     $_is[focus] = fals;
                     $_is[blur] = tru;
                     i[focus](), i[select]();
                 }, 1);
             } else {
-                cls_r(container, 'd');
-                cls_r(container, error);
-                $_is.d = fals;
+                cls_r($container, dialog);
+                cls_r($container, error);
+                $_is[dialog] = fals;
             }
             // force focus state
             $_is[focus] = tru;
@@ -699,15 +704,15 @@
             return $;
         };
         $.d.v = function(s) {
-            cls_s(container, 'd');
-            cls_r(container, error);
+            cls_s($container, dialog);
+            cls_r($container, error);
             $_is[error] = fals;
-            $_is.d = tru;
+            $_is[dialog] = tru;
             s && ($[lot][1] = selection_s());
             return $;
         };
 
-        win[NS][instance][target.id || target.name || Object.keys(win[NS][instance])[length]] = $;
+        win[NS][instance][$source.id || $source.name || Object.keys(win[NS][instance])[length]] = $;
 
         function cls_s(e, s) {
             var c = e[className];
@@ -735,7 +740,7 @@
             a.href = 'javascript:;';
             if (f) {
                 function R(e) {
-                    f.apply(this, [e, $, a]), copy(), view[focus](), (is_func(c_update) && c_update(e, $, view)), e[preventDefault]();
+                    f.apply(this, [e, $, a]), copy(), $view[focus](), (is_func(c_update) && c_update(e, $, $view)), e[preventDefault]();
                 }
                 ev_s(a, "touchstart", R);
                 ev_s(a, "mousedown", R);
@@ -748,10 +753,10 @@
                 i = nul;
             } else {
                 if (i < 0) {
-                    i = tool[children][length] + i;
+                    i = $tool[children][length] + i;
                 }
             }
-            tool[insertBefore](a[0], tool[children][i] || nul);
+            $tool[insertBefore](a[0], $tool[children][i] || nul);
             $.t[id] = a[1];
             return ($.t[id].e = a[0]);
         };
@@ -807,73 +812,73 @@
             return s[3] || "";
         };
         function write() {
-            view[innerHTML] = $.f(target[value])[replace](pattern(P_SPLIT_REGXP, 'gi'), BR + BR)[replace](pattern(P_ANY_REGXP, 'gi'), "");
+            $view[innerHTML] = $.f($source[value])[replace](pattern(P_SPLIT_REGXP, 'gi'), BR + BR)[replace](pattern(P_ANY_REGXP, 'gi'), "");
         } write();
         function copy() {
-            var v = $.f(view[innerHTML]);
+            var v = $.f($view[innerHTML]);
             if (config.tidy) {
                 v = v[replace](pattern(P_SPLIT_REGXP, 'gi'), '</p>\n\n<p$1>')[replace](pattern(BR_REGXP, 'gi'), BR + '\n');
             }
-            target[value] = v;
+            $source[value] = v;
         } copy();
-        cls_s(container, c_class + ' view');
-        target[setAttribute](spellCheck, fals);
-        cls_s(tool, c_class + '-tool');
-        cls_s(view, c_class + '-view');
+        cls_s($container, c_class + ' ' + view);
+        $source[setAttribute](spellCheck, fals);
+        cls_s($tool, c_class + '-' + tool);
+        cls_s($view, c_class + '-' + view);
         if (c_enter) {
-            cls_s(container, 'expand');
+            cls_s($container, 'expand');
         }
-        view[setAttribute](contentEditable, tru);
-        view[setAttribute](spellCheck, fals);
-        view[setAttribute](placeholder, target[placeholder] || "");
-        ev_s(view, focus, function() {
+        $view[setAttribute](contentEditable, tru);
+        $view[setAttribute](spellCheck, fals);
+        $view[setAttribute](placeholder, $source[placeholder] || "");
+        ev_s($view, focus, function() {
             $_is[focus] = tru;
             $_is[blur] = fals;
-            cls_s(container, focus);
-            // Add/remove error state if target has `required` attribute
-            if (target.required) {
-                if (target[value] === "") {
+            cls_s($container, focus);
+            // Add/remove error state if `$source` has `required` attribute
+            if ($source.required) {
+                if ($source[value] === "") {
                     // Do not fire the error state on first focus!
                     // $_is[error] = tru;
-                    // cls_s(container, error);
+                    // cls_s($container, error);
                 } else {
                     $_is[error] = fals;
-                    cls_r(container, error);
+                    cls_r($container, error);
                 }
             }
         });
-        ev_s(view, blur, function() {
+        ev_s($view, blur, function() {
             $_is[focus] = fals;
             $_is[blur] = tru;
             copy();
-            cls_r(container, focus);
-            // Add/remove error state if target has `required` attribute
-            if (target.required) {
-                if (target[value] === "") {
+            cls_r($container, focus);
+            // Add/remove error state if `$source` has `required` attribute
+            if ($source.required) {
+                if ($source[value] === "") {
                     $_is[error] = tru;
-                    cls_s(container, error);
+                    cls_s($container, error);
                 } else {
                     $_is[error] = fals;
-                    cls_r(container, error);
+                    cls_r($container, error);
                 }
             }
         });
-        ev_s(view, paste, function() {
+        ev_s($view, paste, function() {
             delay(function() {
                 var v = selection_s();
                 copy(), write();
-                view[blur]();
+                $view[blur]();
                 selection_r(v);
             }, 1);
         });
         function kk(e) {
             return lc(e.key || String.fromCharCode(e[keyCode]));
         }
-        ev_s(view, keydown, function(e) {
+        ev_s($view, keydown, function(e) {
             var ctrl = e[ctrlKey],
                 shift = e[shiftKey],
                 k = e[keyCode], // deprecated `e.keyCode` value
-                p = container,
+                p = $container,
                 key = kk(e), form;
             if (ctrl && !shift && (key === 'b' || k === 66)) {
                 tools.b[1](), e[preventDefault]();
@@ -906,20 +911,20 @@
                     }
                     form && (form.submit(), e[preventDefault]());
                 } else if (is_func(c_enter)) {
-                    c_enter(e, $, view);
+                    c_enter(e, $, $view);
                 }
             }
-            is_func(c_update) && c_update(e, $, view);
+            is_func(c_update) && c_update(e, $, $view);
             delay(function() {
-                var v = view[innerHTML][replace](pattern(X, 'g'), "");
+                var v = $view[innerHTML][replace](pattern(X, 'g'), "");
                 if (!v || v === BR) {
-                    view[innerHTML] = "";
+                    $view[innerHTML] = "";
                 }
             }, 0);
         });
-        var target_parent = target[parentNode],
-            target_a = el('a');
-        function fn_target_keydown(e) {
+        var $source_parent = $source[parentNode],
+            $source_a = el('a');
+        function fn_source_keydown(e) {
             var ctrl = e[ctrlKey],
                 shift = e[shiftKey],
                 k = e[keyCode],
@@ -927,23 +932,23 @@
             if (ctrl && shift && (key === 'x' || k === 88) && c_x) {
                 tools.x[1](), e[preventDefault]();
             } else if (!shift && (key === 'enter' || k === 13)) {
-                is_func(c_enter) && c_enter(e, $, target);
+                is_func(c_enter) && c_enter(e, $, $source);
             }
-            is_func(c_update) && c_update(e, $, target);
+            is_func(c_update) && c_update(e, $, $source);
             delay(write, 2);
         }
-        function fn_target_focus() {
-            if ($_is.view) {
-                view[focus]();
+        function fn_source_focus() {
+            if ($_is[view]) {
+                $view[focus]();
             }
         }
         function editor_create() {
-            if (container[parentNode]) {
+            if ($container[parentNode]) {
                 return $; // did create already, skip!
             }
-            cls_s(target, c_class + '-source');
-            ev_s(target, keydown, fn_target_keydown);
-            ev_s(target, focus, fn_target_focus);
+            cls_s($source, c_class + '-' + source);
+            ev_s($source, keydown, fn_source_keydown);
+            ev_s($source, focus, fn_source_focus);
             t = config.tools;
             for (i in t) {
                 i = t[i];
@@ -951,26 +956,26 @@
                     if (i === 'x' && !c_x) {
                         continue; // disable the source view if `config.x = false`
                     }
-                    tool[appendChild](tools[i][0]);
+                    $tool[appendChild](tools[i][0]);
                 }
             }
-            container[appendChild](view);
-            if (target_parent && lc(target_parent[nodeName]) === 'p') {
-                target_parent[insertBefore](target_a, target);
-                target_parent[parentNode][insertBefore](target, target_parent);
-                target_parent[parentNode][removeChild](target_parent);
+            $container[appendChild]($view);
+            if ($source_parent && lc($source_parent[nodeName]) === 'p') {
+                $source_parent[insertBefore]($source_a, $source);
+                $source_parent[parentNode][insertBefore]($source, $source_parent);
+                $source_parent[parentNode][removeChild]($source_parent);
             }
-            target[parentNode][insertBefore](container, target);
-            container[appendChild](target);
-            container[appendChild](tool);
-            cls_s(dialog, c_class + '-d');
-            dialog[innerHTML] = '<input type="text">';
+            $source[parentNode][insertBefore]($container, $source);
+            $container[appendChild]($source);
+            $container[appendChild]($tool);
+            cls_s($dialog, c_class + '-' + dialog);
+            $dialog[innerHTML] = '<input type="text">';
             $.d.x();
-            var dc = dialog[children][0];
+            var dc = $dialog[children][0];
             dc[setAttribute](spellCheck, fals);
             ev_s(dc, click, function() {
                 $_is[error] = fals;
-                cls_r(container, error);
+                cls_r($container, error);
             });
             ev_s(dc, keydown, function(e) {
                 var t = this,
@@ -980,42 +985,42 @@
                     key = kk(e);
                 if (!ctrl && !shift && (key === 'enter' || k === 13)) {
                     $.d.x(1, 1);
-                    dialog_fn && dialog_fn(e, $, t), (dialog_fn = 0, t[value] = ""), (is_func(c_update) && c_update(e, $, view)), e[preventDefault]();
+                    dialog_fn && dialog_fn(e, $, t), (dialog_fn = 0, t[value] = ""), (is_func(c_update) && c_update(e, $, $view)), e[preventDefault]();
                 } else if (!shift && ((key === 'escape' || k === 27) || (!t[value][length] && (key === 'backspace' || k === 8)))) {
                     $.d.x(1, 1);
                     dialog_fn = 0, e[preventDefault]();
                 }
             });
-            container[appendChild](dialog);
+            $container[appendChild]($dialog);
             write(), copy();
             return $;
         } editor_create();
         function editor_destroy() {
-            if (!container[parentNode]) {
+            if (!$container[parentNode]) {
                 return $; // did destroy already, skip!
             }
-            if (target_parent) {
-                container[parentNode][insertBefore](target_parent, container);
-                target_parent[insertBefore](target, target_a);
-                target_parent[removeChild](target_a);
+            if ($source_parent) {
+                $container[parentNode][insertBefore]($source_parent, $container);
+                $source_parent[insertBefore]($source, $source_a);
+                $source_parent[removeChild]($source_a);
             }
-            target[style][minHeight] = "";
-            if (!target[getAttribute](style)) {
-                target[removeAttribute](style);
+            $source[style][minHeight] = "";
+            if (!$source[getAttribute](style)) {
+                $source[removeAttribute](style);
             }
-            cls_r(target, c_class + '-source');
-            ev_r(target, keydown, fn_target_keydown);
-            ev_r(target, focus, fn_target_focus);
-            container[parentNode][removeChild](container);
+            cls_r($source, c_class + '-' + source);
+            ev_r($source, keydown, fn_source_keydown);
+            ev_r($source, focus, fn_source_focus);
+            $container[parentNode][removeChild]($container);
             write(), copy();
             return $;
         }
         $.config = config;
-        $.container = container;
-        $.view = view;
-        $.source = $.target = target;
-        $.tool = tool;
-        $.dialog = dialog;
+        $.container = $container;
+        $.view = $view;
+        $.source = $.target = $source;
+        $.tool = $tool;
+        $.dialog = $dialog;
         $.c = selection_c;
         $.e = selection_e;
         $.g = selection_g;
@@ -1032,75 +1037,75 @@
         $.destroy = editor_destroy;
         // focus
         $[focus] = function(i) {
-            if ($_is.view) {
-                var v = view[innerHTML];
-                view[focus]();
+            if ($_is[view]) {
+                var v = $view[innerHTML];
+                $view[focus]();
                 $[lot][1] && selection_r($[lot][1]);
                 $_is[focus] = tru;
                 $_is[blur] = fals;
                 // focus start
                 if (i === 0) {
-                    view[innerHTML] = "";
+                    $view[innerHTML] = "";
                     selection_i(v, 1);
                 // focus end
                 } else if (i === 1) {
-                    view[innerHTML] = "";
+                    $view[innerHTML] = "";
                     selection_i(v, 0);
                 // select all
                 } else if (i === tru) {
                     $r = doc[createRange]();
-                    $r[selectNodeContents](view);
+                    $r[selectNodeContents]($view);
                     $s = $s_get();
                     $s[removeAllRanges]();
                     $s[addRange]($r);
                 }
-            } else if ($_is.source) {
-                target[focus]();
+            } else if ($_is[source]) {
+                $source[focus]();
                 // focus start
                 if (i === 0) {
-                    focus_to(target, 0);
+                    focus_to($source, 0);
                 // focus end
                 } else if (i === 1) {
-                    focus_to(target, target[value][length]);
+                    focus_to($source, $source[value][length]);
                 // select all
                 } else if (i === tru) {
-                    target[select]();
+                    $source[select]();
                 }
             }
             return $;
         };
         // blur
         $[blur] = function() {
-            if ($_is.view) {
+            if ($_is[view]) {
                 $_is[focus] = fals;
                 $_is[blur] = tru;
-                view[blur]();
-            } else if ($_is.source) {
-                target[blur]();
+                $view[blur]();
+            } else if ($_is[source]) {
+                $source[blur]();
             }
             return $;
         };
         // set value
         $.set = function(v, i) {
             v = $.f(v);
-            if ($_is.view || i === 1) {
+            if ($_is[view] || i === 1) {
                 v = v[replace](pattern(P_EDGE_REGXP, 'gi'), "")[replace](pattern(P_SPLIT_REGXP, 'gi'), BR + BR);
             }
             if (is_undef(i)) {
-                if ($_is.view) {
-                    view[innerHTML] = v;
+                if ($_is[view]) {
+                    $view[innerHTML] = v;
                     copy();
-                } else if ($_is.source) {
-                    target[value] = v;
+                } else if ($_is[source]) {
+                    $source[value] = v;
                     write();
-                } else if ($_is.d) {
-                    dialog[children][0][value] = v;
+                } else if ($_is[dialog]) {
+                    $dialog[children][0][value] = v;
                 }
             } else if (i === 0) {
-                target[value] = v;
+                $source[value] = v;
                 write();
             } else if (i === 1) {
-                view[innerHTML] = v;
+                $view[innerHTML] = v;
                 copy();
             }
             return $;
@@ -1109,28 +1114,28 @@
         $.get = function(s, i) {
             if (is_undef(i)) {
                 var v;
-                if ($_is.source) {
-                    v = target[value];
-                } else if ($_is.d) {
-                    v = dialog[children][0][value];
-                } else /* if ($_is.view) */ {
-                    v = target[value]; // default
+                if ($_is[source]) {
+                    v = $source[value];
+                } else if ($_is[dialog]) {
+                    v = $dialog[children][0][value];
+                } else /* if ($_is[view]) */ {
+                    v = $source[value]; // default
                 }
                 return v ? v : s;
             } else if (i === 0) {
-                return target[value] || s;
+                return $source[value] || s;
             } else if (i === 1) {
-                return view[innerHTML] || s;
+                return $view[innerHTML] || s;
             }
         };
         $.disable = function() {
-            view[removeAttribute](contentEditable);
-            target[setAttribute](readOnly, tru);
+            $view[removeAttribute](contentEditable);
+            $source[setAttribute](readOnly, tru);
             return $;
         };
         $.enable = function() {
-            view[setAttribute](contentEditable, tru);
-            target[removeAttribute](readOnly);
+            $view[setAttribute](contentEditable, tru);
+            $source[removeAttribute](readOnly);
             return $s;
         };
         return $;

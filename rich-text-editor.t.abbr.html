@@ -20,7 +20,7 @@
     editor.t('abbr', ['Abbreviation', 'svg:M8 5.344c-1.094 0-2-0.906-2-2s0.906-2 2-2 2 0.906 2 2-0.906 2-2 2zM8 7.688c1.563-1.469 3.688-2.344 6-2.344v7.313c-2.313 0-4.438 0.906-6 2.375-1.563-1.469-3.688-2.375-6-2.375v-7.313c2.313 0 4.438 0.875 6 2.344z'], function() {
         var previous_abbr = editor.e('abbr'),
             abbr = previous_abbr || editor.w('abbr', 1, 'text here…'); // force wrap
-        if (editor.is.d) {
+        if (editor.is.dialog) {
             editor.d.x(true); // cancel
             abbr = editor.e('abbr');
             if (abbr && !abbr.title) {
