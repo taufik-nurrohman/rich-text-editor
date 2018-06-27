@@ -173,7 +173,7 @@
     (function($) {
 
         // plugin version
-        $.version = '1.2.0';
+        $.version = '1.2.1';
 
         // collect all instance(s)
         $[instance] = {};
