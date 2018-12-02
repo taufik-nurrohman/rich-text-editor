@@ -13,8 +13,8 @@
     <script>
 
     var editor = new RTE(document.querySelector('textarea'), {
-        update: function(e, $, node) {
-            if (node !== $.view) return; // exit if we are not typing in the editor view
+        update: function(e, node) {
+            if (node !== this.view) return; // exit if we are not typing in the editor view
             var ctrl = e.ctrlKey,
                 shift = e.shiftKey,
                 code = e.keyCode,

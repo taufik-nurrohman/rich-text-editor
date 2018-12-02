@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  RICH TEXT EDITOR 1.2.1
+ *  RICH TEXT EDITOR 1.3.0
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -59,7 +59,6 @@
         source = 'source',
         dialog = 'dialog',
         error = 'error',
-        tool = 'tool',
         test = 'test',
         contentEditable = 'contenteditable',
         readOnly = 'readonly',
@@ -173,7 +172,7 @@
     (function($) {
 
         // plugin version
-        $.version = '1.2.1';
+        $.version = '1.3.0';
 
         // collect all instance(s)
         $[instance] = {};
@@ -191,7 +190,7 @@
         // placeholder character
         $.x = '\u200b';
 
-    })(win[NS] = function(target, o) {
+    })(win[NS] = function(source, o) {
 
         var $ = this,
             ctrl = '\u2318',
@@ -218,9 +217,9 @@
                 update: 0
             },
             $container = el(div),
-            $tool = el(div),
+            $tools = el(div),
             $view = el(div),
-            $source = target,
+            $source = source,
             $dialog = el(div),
             BR = '<br>',
             X = win[NS].x,
@@ -324,7 +323,7 @@
                                 c = b[getAttribute]('href');
                             }
                             s = 'http://';
-                            $.d(s, (c ? c[replace](/\/+$/, "") : s + lc(a)) || "", function(e, $, i) {
+                            $.d(s, (c ? c[replace](/\/+$/, "") : s + lc(a)) || "", function(e, i) {
                                 selection_a(i[value]), copy();
                             });
                             delay(function() {
@@ -355,7 +354,7 @@
                     $_is[view] = !c_t;
                     $_is[source] = !!c_t;
                     $.d.x(0, 1);
-                    is_func(c_x) && c_x(e, $, c_t || 0);
+                    is_func(c_x) && c_x.call($, e, c_t || 0);
                 }
             };
 
@@ -740,7 +739,7 @@
             a.href = 'javascript:;';
             if (f) {
                 function R(e) {
-                    f.apply(this, [e, $, a]), copy(), $view[focus](), (is_func(c_update) && c_update(e, $, $view)), e[preventDefault]();
+                    f.call($, e, a), copy(), $view[focus](), (is_func(c_update) && c_update.call($, e, $view)), e[preventDefault]();
                 }
                 ev_s(a, "touchstart", R);
                 ev_s(a, "mousedown", R);
@@ -753,10 +752,10 @@
                 i = nul;
             } else {
                 if (i < 0) {
-                    i = $tool[children][length] + i;
+                    i = $tools[children][length] + i;
                 }
             }
-            $tool[insertBefore](a[0], $tool[children][i] || nul);
+            $tools[insertBefore](a[0], $tools[children][i] || nul);
             $.t[id] = a[1];
             return ($.t[id].e = a[0]);
         };
@@ -823,7 +822,7 @@
         } copy();
         cls_s($container, c_class + ' ' + view);
         $source[setAttribute](spellCheck, fals);
-        cls_s($tool, c_class + '-' + tool);
+        cls_s($tools, c_class + '-tools');
         cls_s($view, c_class + '-' + view);
         if (c_enter) {
             cls_s($container, 'expand');
@@ -831,7 +830,7 @@
         $view[setAttribute](contentEditable, tru);
         $view[setAttribute](spellCheck, fals);
         $view[setAttribute](placeholder, $source[placeholder] || "");
-        ev_s($view, focus, function() {
+        function fn_view_focus() {
             $_is[focus] = tru;
             $_is[blur] = fals;
             cls_s($container, focus);
@@ -846,8 +845,8 @@
                     cls_r($container, error);
                 }
             }
-        });
-        ev_s($view, blur, function() {
+        }
+        function fn_view_blur() {
             $_is[focus] = fals;
             $_is[blur] = tru;
             copy();
@@ -862,19 +861,19 @@
                     cls_r($container, error);
                 }
             }
-        });
-        ev_s($view, paste, function() {
+        }
+        function fn_view_paste() {
             delay(function() {
                 var v = selection_s();
                 copy(), write();
                 $view[blur]();
                 selection_r(v);
             }, 1);
-        });
+        }
         function kk(e) {
             return lc(e.key || String.fromCharCode(e[keyCode]));
         }
-        ev_s($view, keydown, function(e) {
+        function fn_view_keydown(e) {
             var ctrl = e[ctrlKey],
                 shift = e[shiftKey],
                 k = e[keyCode], // deprecated `e.keyCode` value
@@ -914,16 +913,20 @@
                     c_enter(e, $, $view);
                 }
             }
-            is_func(c_update) && c_update(e, $, $view);
+            is_func(c_update) && c_update.call($, e, $view);
             delay(function() {
                 var v = $view[innerHTML][replace](pattern(X, 'g'), "");
                 if (!v || v === BR) {
                     $view[innerHTML] = "";
                 }
             }, 0);
-        });
+        }
         var $source_parent = $source[parentNode],
-            $source_a = el('a');
+            $source_a = el('a'),
+            $prompt = el('input');
+        $prompt.type = 'text';
+        $prompt[setAttribute](spellCheck, fals);
+        $dialog[appendChild]($prompt);
         function fn_source_keydown(e) {
             var ctrl = e[ctrlKey],
                 shift = e[shiftKey],
@@ -934,7 +937,7 @@
             } else if (!shift && (key === 'enter' || k === 13)) {
                 is_func(c_enter) && c_enter(e, $, $source);
             }
-            is_func(c_update) && c_update(e, $, $source);
+            is_func(c_update) && c_update.call($, e, $source);
             delay(write, 2);
         }
         function fn_source_focus() {
@@ -942,11 +945,33 @@
                 $view[focus]();
             }
         }
+        function fn_prompt_click() {
+            $_is[error] = fals;
+            cls_r($container, error);
+        }
+        function fn_prompt_keydown(e) {
+            var t = this,
+                ctrl = e[ctrlKey],
+                shift = e[shiftKey],
+                k = e[keyCode],
+                key = kk(e);
+            if (!ctrl && !shift && (key === 'enter' || k === 13)) {
+                $.d.x(1, 1);
+                dialog_fn && dialog_fn.call($, e, t), (dialog_fn = 0, t[value] = ""), (is_func(c_update) && c_update.call($, e, $view)), e[preventDefault]();
+            } else if (!shift && ((key === 'escape' || k === 27) || (!t[value][length] && (key === 'backspace' || k === 8)))) {
+                $.d.x(1, 1);
+                dialog_fn = 0, e[preventDefault]();
+            }
+        }
         function editor_create() {
             if ($container[parentNode]) {
                 return $; // did create already, skip!
             }
             cls_s($source, c_class + '-' + source);
+            ev_s($view, keydown, fn_view_keydown);
+            ev_s($view, focus, fn_view_focus);
+            ev_s($view, blur, fn_view_blur);
+            ev_s($view, paste, fn_view_paste);
             ev_s($source, keydown, fn_source_keydown);
             ev_s($source, focus, fn_source_focus);
             t = config.tools;
@@ -956,7 +981,7 @@
                     if (i === 'x' && !c_x) {
                         continue; // disable the source view if `config.x = false`
                     }
-                    $tool[appendChild](tools[i][0]);
+                    $tools[appendChild](tools[i][0]);
                 }
             }
             $container[appendChild]($view);
@@ -967,30 +992,11 @@
             }
             $source[parentNode][insertBefore]($container, $source);
             $container[appendChild]($source);
-            $container[appendChild]($tool);
+            $container[appendChild]($tools);
             cls_s($dialog, c_class + '-' + dialog);
-            $dialog[innerHTML] = '<input type="text">';
             $.d.x();
-            var dc = $dialog[children][0];
-            dc[setAttribute](spellCheck, fals);
-            ev_s(dc, click, function() {
-                $_is[error] = fals;
-                cls_r($container, error);
-            });
-            ev_s(dc, keydown, function(e) {
-                var t = this,
-                    ctrl = e[ctrlKey],
-                    shift = e[shiftKey],
-                    k = e[keyCode],
-                    key = kk(e);
-                if (!ctrl && !shift && (key === 'enter' || k === 13)) {
-                    $.d.x(1, 1);
-                    dialog_fn && dialog_fn(e, $, t), (dialog_fn = 0, t[value] = ""), (is_func(c_update) && c_update(e, $, $view)), e[preventDefault]();
-                } else if (!shift && ((key === 'escape' || k === 27) || (!t[value][length] && (key === 'backspace' || k === 8)))) {
-                    $.d.x(1, 1);
-                    dialog_fn = 0, e[preventDefault]();
-                }
-            });
+            ev_s($prompt, click, fn_prompt_click);
+            ev_s($prompt, keydown, fn_prompt_keydown);
             $container[appendChild]($dialog);
             write(), copy();
             return $;
@@ -1009,8 +1015,14 @@
                 $source[removeAttribute](style);
             }
             cls_r($source, c_class + '-' + source);
+            ev_r($view, keydown, fn_view_keydown);
+            ev_r($view, focus, fn_view_focus);
+            ev_r($view, blur, fn_view_blur);
+            ev_r($view, paste, fn_view_paste);
             ev_r($source, keydown, fn_source_keydown);
             ev_r($source, focus, fn_source_focus);
+            ev_r($prompt, click, fn_prompt_click);
+            ev_r($prompt, keydown, fn_prompt_keydown);
             $container[parentNode][removeChild]($container);
             write(), copy();
             return $;
@@ -1018,8 +1030,8 @@
         $.config = config;
         $.container = $container;
         $.view = $view;
-        $.source = $.target = $source;
-        $.tool = $tool;
+        $.source = $source;
+        $.tools = $tools;
         $.dialog = $dialog;
         $.c = selection_c;
         $.e = selection_e;
@@ -1136,7 +1148,7 @@
         $.enable = function() {
             $view[setAttribute](contentEditable, tru);
             $source[removeAttribute](readOnly);
-            return $s;
+            return $;
         };
         return $;
     });

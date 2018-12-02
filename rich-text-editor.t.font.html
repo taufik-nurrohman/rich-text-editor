@@ -45,7 +45,7 @@
 
     // font size
     editor.t('font', ['Font Size', 'svg:M2 8v-2h6v2h-2v4.656h-2v-4.656h-2zM6 2.656h8.656v2h-3.313v8h-2v-8h-3.344v-2z'], function() {
-        var font = editor.e('span') || editor.w('span', 1); // force wrap
+        var font = this.e('span') || this.w('span', 1); // force wrap
         ++font_sizes_i;
         if (font_sizes_i > font_sizes_count - 1) {
             font_sizes_i = 0;
@@ -55,14 +55,14 @@
         } else {
             font.style.fontSize = "";
             if (!font.getAttribute('style')) {
-                editor.w('span', 0); // force unwrap
+                this.w('span', 0); // force unwrap
             }
         }
     }, -1);
 
     // font family
     editor.t('font', ['Font Family', 'svg:M10.625 12.344h1.406l-3.406-8.688h-1.25l-3.406 8.688h1.406l0.75-2h3.75zM13.344 1.344c0.719 0 1.313 0.594 1.313 1.313v10.688c0 0.719-0.594 1.313-1.313 1.313h-10.688c-0.719 0-1.313-0.594-1.313-1.313v-10.688c0-0.719 0.594-1.313 1.313-1.313h10.688zM6.625 9l1.375-3.688 1.375 3.688h-2.75z'], function() {
-        var font = editor.e('span') || editor.w('span', 1); // force wrap
+        var font = this.e('span') || this.w('span', 1); // force wrap
         ++font_faces_i;
         if (font_faces_i > font_faces_count - 1) {
             font_faces_i = 0;
@@ -72,7 +72,7 @@
         } else {
             font.style.fontFamily = "";
             if (!font.getAttribute('style')) {
-                editor.w('span', 0); // force unwrap
+                this.w('span', 0); // force unwrap
             }
         }
     }, -1);

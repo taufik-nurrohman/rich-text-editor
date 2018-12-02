@@ -34,12 +34,12 @@ Options
 -------
 
 ~~~ .js
-var editor = new RTE(target, config);
+var editor = new RTE(source, config);
 ~~~
 
 Variable | Description
 -------- | -----------
-`target` | The text area element.
+`source` | The text area element.
 `config` | The configuration data. See below!
 
 ~~~ .js
@@ -84,8 +84,8 @@ config = {
     },
     tidy: true, // tidy HTML output?
     enter: true, // set to `false` to automatically submit the closest form on enter key press
-    x: function(e, $, node) {}, // on mode change (view/source); set to `false` to disable the source view
-    update: function(e, $, node) {} // on view/source update
+    x: function(e, node) {}, // on mode change (view/source); set to `false` to disable the source view
+    update: function(e, node) {} // on view/source update
 };
 ~~~
 
@@ -104,6 +104,8 @@ editor.focus(true); // select all
 editor.blur();
 editor.enable();
 editor.disable();
+editor.create();
+editor.destroy();
 ~~~
 
 ### Properties
@@ -114,7 +116,7 @@ editor.config; // editor configuration
 editor.container; // editor container
 editor.view; // editor view
 editor.source; // editor source
-editor.tool; // editor tool
+editor.tools; // editor tools
 editor.dialog; // editor dialog
 ~~~
 
@@ -235,7 +237,7 @@ if (editor.is.e('strong')) {
 Create a bold button:
 
 ~~~ .js
-editor.t('b', ['Bold', '<b>B</b>', 'Ctrl+B'], function(e, $, node) { … });
+editor.t('b', ['Bold', '<b>B</b>', 'Ctrl+B'], function(e, node) { … });
 ~~~
 
 ### Dialog
@@ -243,7 +245,7 @@ editor.t('b', ['Bold', '<b>B</b>', 'Ctrl+B'], function(e, $, node) { … });
 #### Create
 
 ~~~ .js
-// fn(e, $, input);
+// fn(e, input);
 editor.d(placeholder, value, fn);
 ~~~
 

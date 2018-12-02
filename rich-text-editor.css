@@ -1,5 +1,5 @@
 .rich-text-editor,
-.rich-text-editor-tool,
+.rich-text-editor-tools,
 .rich-text-editor-view,
 .rich-text-editor-source {
   display:block;
@@ -33,8 +33,8 @@
   line-height:1.5em;
   position:relative;
 }
-.rich-text-editor-tool {
-  font:normal normal 100%/2em "Times New Roman",Times,Serif;
+.rich-text-editor-tools {
+  font:normal normal 100%/2em "Times New Roman",Times,serif;
   text-align:center;
   -webkit-transition:all .25s ease-out .25s;
   -moz-transition:all .25s ease-out .25s;
@@ -42,12 +42,12 @@
   opacity:0;
   visibility:hidden;
 }
-.rich-text-editor-tool:after {
+.rich-text-editor-tools::after {
   content:"";
   display:table;
   clear:both;
 }
-.rich-text-editor-tool a {
+.rich-text-editor-tools a {
   display:block;
   float:left;
   width:2em;
@@ -55,7 +55,7 @@
   color:#00f;
   text-decoration:none;
 }
-.rich-text-editor-tool svg {
+.rich-text-editor-tools svg {
   display:inline-block;
   vertical-align:middle;
   width:1em;
@@ -66,8 +66,8 @@
   text-decoration:none;
   fill:currentColor;
 }
-.rich-text-editor-tool a:focus,
-.rich-text-editor-tool a:hover {background:#eff}
+.rich-text-editor-tools a:focus,
+.rich-text-editor-tools a:hover {background:#eff}
 .rich-text-editor-view {
   display:block;
   -webkit-box-sizing:content-box;
@@ -79,17 +79,17 @@
   cursor:text;
 }
 .rich-text-editor.expand .rich-text-editor-view {min-height:6em}
-.rich-text-editor:hover .rich-text-editor-tool,
-.rich-text-editor-view:focus + .rich-text-editor-source + .rich-text-editor-tool,
-.rich-text-editor-source:focus + .rich-text-editor-tool {
+.rich-text-editor:hover .rich-text-editor-tools,
+.rich-text-editor-view:focus + .rich-text-editor-source + .rich-text-editor-tools,
+.rich-text-editor-source:focus + .rich-text-editor-tools {
   -webkit-transition-delay:.125s;
   -moz-transition-delay:.125s;
   transition-delay:.125s;
   opacity:1;
   visibility:visible;
 }
-.rich-text-editor.source .rich-text-editor-tool a {display:none}
-.rich-text-editor.source .rich-text-editor-tool .rich-text-editor-t\:x {display:block}
+.rich-text-editor.source .rich-text-editor-tools a {display:none}
+.rich-text-editor.source .rich-text-editor-tools .rich-text-editor-t\:x {display:block}
 .rich-text-editor-source {
   width:100%;
   min-height:8em;
@@ -154,11 +154,11 @@
 .rich-text-editor.error {border-color:#f00}
 
 /* editor placeholder */
-.rich-text-editor-view:empty:before {
+.rich-text-editor-view:empty::before {
   content:attr(placeholder);
   opacity:.4;
 }
-.rich-text-editor-view:focus:before {display:none}
+.rich-text-editor-view:focus::before {display:none}
 
 /* editor content */
 .rich-text-editor-view a {
