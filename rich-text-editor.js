@@ -1,6 +1,6 @@
 /*!
  * =======================================================
- *  RICH TEXT EDITOR 1.3.0
+ *  RICH TEXT EDITOR 1.3.1
  * =======================================================
  *
  *   Author: Taufik Nurrohman
@@ -172,7 +172,7 @@
     (function($) {
 
         // plugin version
-        $.version = '1.3.0';
+        $.version = '1.3.1';
 
         // collect all instance(s)
         $[instance] = {};
@@ -190,7 +190,7 @@
         // placeholder character
         $.x = '\u200b';
 
-    })(win[NS] = function(source, o) {
+    })(win[NS] = function($source, o) {
 
         var $ = this,
             ctrl = '\u2318',
@@ -219,7 +219,6 @@
             $container = el(div),
             $tools = el(div),
             $view = el(div),
-            $source = source,
             $dialog = el(div),
             BR = '<br>',
             X = win[NS].x,
