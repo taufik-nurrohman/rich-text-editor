@@ -1,14 +1,14 @@
 {
-  "name": "r-t-e",
-  "version": "1.3.1",
+  "name": "@taufik-nurrohman/rich-text-editor",
   "description": "A rich text editor that is designed to accept limited set of inline HTML tags only.",
+  "version": "1.3.1",
   "main": "rich-text-editor.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tovic/rich-text-editor.git"
+    "url": "git+https://github.com/taufik-nurrohman/rich-text-editor.git"
   },
   "keywords": [
     "rich",
@@ -22,7 +22,7 @@
   "author": "Taufik Nurrohman",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tovic/rich-text-editor/issues"
+    "url": "https://github.com/taufik-nurrohman/rich-text-editor/issues"
   },
-  "homepage": "https://tovic.github.io/rich-text-editor"
+  "homepage": "https://taufik-nurrohman.github.io/rich-text-editor"
 }
