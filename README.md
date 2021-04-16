@@ -7,7 +7,7 @@ This rich text editor works best on any form that are accessible in the public s
 
 ![Rich Text Editor](https://cloud.githubusercontent.com/assets/1669261/26141683/48b2ec6a-3b07-11e7-9173-5a1f002c5441.gif)
 
-[Demo](http://tovic.github.io/rich-text-editor "View Demo")
+[Demo](http://taufik-nurrohman.github.io/rich-text-editor "View Demo")
 
 Usage
 -----
